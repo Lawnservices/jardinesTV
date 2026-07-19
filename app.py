@@ -38,12 +38,22 @@ def allowed_file(filename):
 
 
 
+# @app.route("/")
+# def inicio():
+
+#     return render_template("index.html")
+
 @app.route("/")
 def inicio():
 
-    return render_template("index.html")
+    videos = os.listdir(
+        app.config["UPLOAD_FOLDER"]
+    )
 
-
+    return render_template(
+        "index.html",
+        videos=videos
+    )
 
 @app.route("/upload", methods=["GET", "POST"])
 def upload():
