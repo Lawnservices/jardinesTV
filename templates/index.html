@@ -46,33 +46,59 @@ Mira videos de jardines, plantas, paisajes y grandes ideas para tu hogar.
 📤 Subir mi video
 </a>
 
-</section>
-
-
-
 <section class="content">
 
 <h2>🎬 Videos recientes</h2>
+
+
+<div class="video-grid">
+
+
 {% for video in videos %}
 
-<video class="video-card" controls>
-    <source src="/uploads/{{ video }}">
+
+<div class="video-item">
+
+
+<video controls>
+
+<source src="/uploads/{{ video }}">
+
 </video>
 
-{% endfor %}
-<div class="video-box">
+
+<h3>
+🌿 Video de jardín
+</h3>
+
 
 <p>
-Todavía no hay videos publicados.
+Nuevo video en JardinTV
 </p>
 
-<p>
-¡Sé la primera persona en compartir tu jardín!
-</p>
 
 </div>
 
+
+{% else %}
+
+
+<p>
+Todavía no hay videos.
+</p>
+
+
+{% endfor %}
+
+
+</div>
+
+
 </section>
+
+
+
+ 
 
 
 <footer>
