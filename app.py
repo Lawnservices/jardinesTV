@@ -23,7 +23,8 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 ALLOWED_EXTENSIONS = {
     "mp4",
     "mov",
-    "webm"
+    "webm",
+    "m4v"
 }
 
 
