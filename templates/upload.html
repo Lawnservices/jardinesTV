@@ -5,54 +5,118 @@
 
 <meta charset="UTF-8">
 
-<title>Subir Video</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Subir Video | JardinTV</title>
 
 <link rel="stylesheet" href="/static/style.css">
 
 </head>
 
+
 <body>
 
-<h1>Subir video</h1>
+
+<header class="navbar">
+
+<div class="logo">
+🌿 <span>JardinTV</span>
+</div>
+
+
+<nav>
+
+<a href="/">🏠 Inicio</a>
+
+<a href="/upload">📤 Subir video</a>
+
+<a href="/watch">🎥 Videos</a>
+
+</nav>
+
+
+</header>
+
+
+
+<section class="upload-section">
+
+
+<div class="upload-card">
+
+
+<h1>📤 Subir un video</h1>
+
+
+<p>
+Comparte tu jardín, plantas o ideas con la comunidad 🌱
+</p>
+
+
+
 <form method="POST" enctype="multipart/form-data">
 
-    <input type="file" name="video" accept="video/*">
 
-    <br><br>
+<label>
+Título del video
+</label>
 
-    <button>Subir</button>
-
-</form>
-<!-- <form>
-
-<input
+<input 
 type="text"
-placeholder="Título">
+placeholder="Ejemplo: Mi jardín en primavera"
+>
 
-<br><br>
+
+<label>
+Descripción
+</label>
 
 <textarea
-placeholder="Descripción"></textarea>
+placeholder="Cuéntanos sobre tu jardín..."
+></textarea>
 
-<br><br>
 
-<input
-type="file">
 
-<br><br>
+<label>
+Selecciona tu video
+</label>
 
-<input
-type="file">
 
-<br><br>
+<input 
+type="file"
+name="video"
+accept="video/*"
+required
+>
 
-<button>
 
-Publicar
+
+<button class="btn">
+
+🚀 Publicar video
 
 </button>
 
-</form> -->
+
+</form>
+
+
+</div>
+
+
+</section>
+
+
+
+<footer>
+
+<p>
+© 2026 JardinTV 🌿
+</p>
+
+</footer>
+
+
 
 </body>
 

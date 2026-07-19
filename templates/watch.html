@@ -5,29 +5,138 @@
 
 <meta charset="UTF-8">
 
-<title>Video</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Videos | JardinTV</title>
 
 <link rel="stylesheet" href="/static/style.css">
 
 </head>
 
+
 <body>
 
-<h1>Video</h1>
 
-<p>Aquí se reproducirá el video.</p>
+<header class="navbar">
+
+<div class="logo">
+🌿 <span>JardinTV</span>
+</div>
+
+
+<nav>
+
+<a href="/">🏠 Inicio</a>
+
+<a href="/upload">📤 Subir video</a>
+
+<a href="/watch">🎥 Videos</a>
+
+</nav>
+
+</header>
+
+
+
+<section class="videos-page">
+
+
+<h1>🎥 Videos de jardines</h1>
+
+
+<div class="video-feed">
+
 
 {% for video in videos %}
 
-<video width="400" controls>
 
-    <source src="/uploads/{{ video }}">
+<div class="video-card">
+
+
+<video 
+class="short-video"
+controls
+playsinline
+>
+
+<source src="/uploads/{{ video }}">
 
 </video>
 
-<br><br>
+
+
+<div class="video-info">
+
+<h3>🌱 Video de jardín</h3>
+
+<p>
+Comparte tus mejores ideas verdes
+</p>
+
+
+<div class="actions">
+
+<button>
+❤️ 0
+</button>
+
+
+<button>
+💬
+</button>
+
+
+<button>
+📤
+</button>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+{% else %}
+
+
+<div class="video-empty">
+
+<h2>
+🌿 Todavía no hay videos
+</h2>
+
+<p>
+Sé el primero en compartir tu jardín.
+</p>
+
+</div>
+
 
 {% endfor %}
+
+
+</div>
+
+
+</section>
+
+
+
+<footer>
+
+<p>
+© 2026 JardinTV 🌿
+</p>
+
+</footer>
+
+
+
 </body>
 
 </html>
