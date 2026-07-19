@@ -474,3 +474,94 @@ footer {
 
 
 }
+/*videos grandes*/
+/* GRID DE VIDEOS COMO YOUTUBE */
+
+
+.video-grid {
+
+    display:grid;
+
+    grid-template-columns:repeat(3, 1fr);
+
+    gap:25px;
+
+    max-width:1200px;
+
+    margin:auto;
+
+}
+
+
+
+.video-item {
+
+    background:white;
+
+    border-radius:15px;
+
+    overflow:hidden;
+
+    box-shadow:0 5px 15px rgba(0,0,0,0.1);
+
+    padding-bottom:15px;
+
+}
+
+
+
+.video-item video {
+
+    width:100%;
+
+    height:220px;
+
+    object-fit:cover;
+
+    background:black;
+
+}
+
+
+
+.video-item h3 {
+
+    margin:15px;
+
+    color:#176b2c;
+
+}
+
+
+
+.video-item p {
+
+    margin:15px;
+
+    color:#666;
+
+}
+
+
+
+@media(max-width:900px){
+
+    .video-grid {
+
+        grid-template-columns:repeat(2, 1fr);
+
+    }
+
+}
+
+
+
+@media(max-width:600px){
+
+    .video-grid {
+
+        grid-template-columns:1fr;
+
+    }
+
+}
