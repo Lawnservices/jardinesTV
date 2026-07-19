@@ -17,6 +17,17 @@
 
 <p>Aquí se reproducirá el video.</p>
 
+{% for video in videos %}
+
+<video width="400" controls>
+
+    <source src="/uploads/{{ video }}">
+
+</video>
+
+<br><br>
+
+{% endfor %}
 </body>
 
 </html>
