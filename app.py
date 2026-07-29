@@ -9,7 +9,6 @@ app = Flask(__name__)
 app.secret_key = "jardintv-secreto"
 
 
-
 # =========================
 # CARPETA VIDEOS EN RENDER
 # =========================
@@ -18,12 +17,10 @@ UPLOAD_FOLDER = "static/uploads/videos"
 
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
-
 os.makedirs(
     UPLOAD_FOLDER,
     exist_ok=True
 )
-
 
 
 # 200 MB máximo
@@ -33,7 +30,7 @@ app.config["MAX_CONTENT_LENGTH"] = 200 * 1024 * 1024
 
 
 # =========================
-# API PYTHONANYWHERE
+# API
 # =========================
 
 API_URL = "https://www.creantunegocio.com/api/videos"
@@ -64,27 +61,32 @@ def allowed_file(filename):
 
 
 # =========================
-# PAGINA PRINCIPAL
+# INICIO
 # =========================
 
 @app.route("/")
 def inicio():
 
+    videos = []
+
     try:
 
         respuesta = requests.get(
             API_URL,
-            timeout=10
+            timeout=15
         )
+
+
+        print("API GET:", respuesta.status_code)
+        print(respuesta.text)
+
 
         videos = respuesta.json()
 
 
     except Exception as e:
 
-        print(e)
-
-        videos = []
+        print("ERROR GET API:", e)
 
 
 
@@ -95,12 +97,14 @@ def inicio():
 
 
 
+
 # =========================
 # SUBIR VIDEO
 # =========================
 
 @app.route("/upload", methods=["GET","POST"])
 def upload():
+
 
     if request.method == "POST":
 
@@ -143,13 +147,7 @@ def upload():
 
 
 
-        # nombre único
-
-        filename = (
-            uuid.uuid4().hex
-            +
-            extension
-        )
+        filename = uuid.uuid4().hex + extension
 
 
 
@@ -160,30 +158,70 @@ def upload():
 
 
 
-        # guardar video en Render
+        # Guardar video en Render
 
         video.save(ruta)
 
 
+        print("VIDEO GUARDADO:")
+        print(ruta)
 
-        # mandar datos a API
+
+
+        # =========================
+        # ENVIAR A API
+        # =========================
+
 
         try:
 
-            requests.post(
+            respuesta = requests.post(
+
                 API_URL,
+
                 data={
+
                     "titulo": titulo,
+
                     "descripcion": descripcion,
+
                     "filename": filename
+
                 },
-                timeout=10
+
+                timeout=15
+
             )
+
+
+            print("API POST STATUS:")
+            print(respuesta.status_code)
+
+
+            print("API POST RESPUESTA:")
+            print(respuesta.text)
+
+
+
+            if respuesta.status_code != 200:
+
+                flash("Error guardando en base de datos")
+
+                return redirect("/upload")
+
 
 
         except Exception as e:
 
+
+            print("ERROR POST API:")
             print(e)
+
+
+            flash("No se pudo conectar con la API")
+
+            return redirect("/upload")
+
 
 
 
@@ -202,28 +240,39 @@ def upload():
 
 
 
+
 # =========================
-# VIDEOS
+# WATCH
 # =========================
 
 @app.route("/watch")
 def watch():
 
+
+    videos = []
+
+
     try:
+
 
         respuesta = requests.get(
             API_URL,
-            timeout=10
+            timeout=15
         )
+
+
+        print("WATCH API:")
+        print(respuesta.text)
+
 
         videos = respuesta.json()
 
 
+
     except Exception as e:
 
+        print("ERROR WATCH:")
         print(e)
-
-        videos = []
 
 
 
@@ -234,25 +283,32 @@ def watch():
 
 
 
+
 # =========================
-# MOSTRAR ARCHIVO VIDEO
+# SERVIR VIDEOS
 # =========================
 
 @app.route("/uploads/<filename>")
 def uploaded_file(filename):
 
+
     return send_from_directory(
+
         app.config["UPLOAD_FOLDER"],
+
         filename
+
     )
 
 
 
+
 # =========================
-# INICIO SERVIDOR
+# START
 # =========================
 
 if __name__ == "__main__":
+
 
     app.run(
         host="0.0.0.0",
