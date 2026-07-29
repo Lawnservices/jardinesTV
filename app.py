@@ -36,7 +36,7 @@ app.config["MAX_CONTENT_LENGTH"] = 200 * 1024 * 1024
 # API PYTHONANYWHERE
 # =========================
 
-API_URL = "https://mlaguna.pythonanywhere.com/api/videos"
+API_URL = "https://www.creantunegocio.com/api/videos"
 
 
 
