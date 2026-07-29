@@ -46,6 +46,7 @@ Mira videos de jardines, plantas, paisajes y grandes ideas para tu hogar.
 📤 Subir mi video
 </a>
 
+ 
 <section class="content">
 
 <h2>🎬 Videos recientes</h2>
@@ -62,18 +63,21 @@ Mira videos de jardines, plantas, paisajes y grandes ideas para tu hogar.
 
 <video controls>
 
-<source src="/uploads/{{ video }}">
+<source 
+src="/static/uploads/videos/{{ video.filename }}"
+type="video/mp4"
+>
 
 </video>
 
 
 <h3>
-🌿 Video de jardín
+🌿 {{ video.titulo }}
 </h3>
 
 
 <p>
-Nuevo video en JardinTV
+{{ video.descripcion }}
 </p>
 
 
@@ -95,8 +99,6 @@ Todavía no hay videos.
 
 
 </section>
-
-
 
  
 

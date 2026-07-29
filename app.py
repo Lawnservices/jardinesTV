@@ -1,5 +1,7 @@
 from flask import Flask, render_template, request, redirect, flash
 import os
+import uuid
+import mysql.connector
 from werkzeug.utils import secure_filename
 
 
@@ -8,24 +10,54 @@ app = Flask(__name__)
 app.secret_key = "jardintv-secreto"
 
 
-UPLOAD_FOLDER = "uploads"
+# =========================
+# CONEXION MYSQL
+# =========================
+
+def get_db():
+
+    return mysql.connector.connect(
+        host="MLaguna.mysql.pythonanywhere-services.com",
+        user="MLaguna",
+        password="VQV4vZ9.%M(Yt9^",
+        database="MLaguna$jardinestv"
+    )
+
+
+
+# =========================
+# CARPETA DE VIDEOS
+# =========================
+
+UPLOAD_FOLDER = "/home/MLaguna/miguel_lawn_services/static/uploads/videos"
 
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
-# Tamaño máximo: 200 MB
+
+os.makedirs(
+    UPLOAD_FOLDER,
+    exist_ok=True
+)
+
+
+
+# Tamaño máximo 200 MB
+
 app.config["MAX_CONTENT_LENGTH"] = 200 * 1024 * 1024
 
 
-os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
+# =========================
+# EXTENSIONES PERMITIDAS
+# =========================
 
-# Extensiones permitidas
 ALLOWED_EXTENSIONS = {
     "mp4",
     "mov",
     "webm",
     "m4v"
 }
+
 
 
 def allowed_file(filename):
@@ -38,22 +70,40 @@ def allowed_file(filename):
 
 
 
-# @app.route("/")
-# def inicio():
-
-#     return render_template("index.html")
+# =========================
+# PAGINA PRINCIPAL
+# =========================
 
 @app.route("/")
 def inicio():
 
-    videos = os.listdir(
-        app.config["UPLOAD_FOLDER"]
+    db = get_db()
+
+    cursor = db.cursor(dictionary=True)
+
+
+    cursor.execute(
+        "SELECT * FROM videos ORDER BY id DESC"
     )
+
+
+    videos = cursor.fetchall()
+
+
+    cursor.close()
+    db.close()
+
 
     return render_template(
         "index.html",
         videos=videos
     )
+
+
+
+# =========================
+# SUBIR VIDEO
+# =========================
 
 @app.route("/upload", methods=["GET", "POST"])
 def upload():
@@ -62,12 +112,17 @@ def upload():
     if request.method == "POST":
 
 
+        titulo = request.form.get("titulo")
+
+        descripcion = request.form.get("descripcion")
+
         video = request.files.get("video")
 
 
-        if not video:
 
-            flash("No seleccionaste ningún video")
+        if not titulo or not video:
+
+            flash("Falta título o video")
 
             return redirect("/upload")
 
@@ -91,7 +146,11 @@ def upload():
 
 
 
-        filename = secure_filename(video.filename)
+        # Crear nombre único
+
+        extension = os.path.splitext(video.filename)[1]
+
+        filename = uuid.uuid4().hex + extension
 
 
 
@@ -101,27 +160,85 @@ def upload():
         )
 
 
+
+        # Guardar archivo físico
+
         video.save(ruta)
 
+
+
+        # Guardar datos en MySQL
+
+        db = get_db()
+
+        cursor = db.cursor()
+
+
+
+        cursor.execute("""
+            INSERT INTO videos
+            (titulo, descripcion, filename)
+            VALUES (%s,%s,%s)
+        """,
+        (
+            titulo,
+            descripcion,
+            filename
+        ))
+
+
+
+        db.commit()
+
+
+        cursor.close()
+
+        db.close()
+
+
+
+        flash("Video publicado correctamente")
 
 
         return redirect("/watch")
 
 
 
-    return render_template("upload.html")
+    return render_template(
+        "upload.html"
+    )
 
 
 
-
+# =========================
+# MOSTRAR VIDEOS
+# =========================
 
 @app.route("/watch")
 def watch():
 
 
-    videos = os.listdir(
-        app.config["UPLOAD_FOLDER"]
+    db = get_db()
+
+
+    cursor = db.cursor(dictionary=True)
+
+
+
+    cursor.execute(
+        "SELECT * FROM videos ORDER BY id DESC"
     )
+
+
+
+    videos = cursor.fetchall()
+
+
+
+    cursor.close()
+
+    db.close()
+
 
 
     return render_template(
@@ -131,11 +248,15 @@ def watch():
 
 
 
+# =========================
+# SERVIR VIDEOS
+# =========================
 
 @app.route("/uploads/<filename>")
 def uploaded_file(filename):
 
     from flask import send_from_directory
+
 
     return send_from_directory(
         app.config["UPLOAD_FOLDER"],
@@ -144,6 +265,9 @@ def uploaded_file(filename):
 
 
 
+# =========================
+# INICIO
+# =========================
 
 if __name__ == "__main__":
 

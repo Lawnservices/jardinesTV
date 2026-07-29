@@ -57,44 +57,53 @@ Comparte tu jardín, plantas o ideas con la comunidad 🌱
 <form method="POST" enctype="multipart/form-data">
 
 
-<label>
+<label for="titulo">
 Título del video
 </label>
 
+
 <input 
 type="text"
+id="titulo"
+name="titulo"
+maxlength="200"
 placeholder="Ejemplo: Mi jardín en primavera"
+required
 >
 
 
-<label>
+
+<label for="descripcion">
 Descripción
 </label>
 
+
 <textarea
+id="descripcion"
+name="descripcion"
+maxlength="1000"
 placeholder="Cuéntanos sobre tu jardín..."
 ></textarea>
 
 
 
-<label>
+<label for="video">
 Selecciona tu video
 </label>
 
 
 <input 
 type="file"
+id="video"
 name="video"
-accept=".mp4,.mov,.webm,.m4v,video/*"
+accept="video/mp4,video/webm,video/quicktime"
 required
 >
 
 
 
-<button class="btn">
-
+<button class="btn" type="submit">
 🚀 Publicar video
-
 </button>
 
 

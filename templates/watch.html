@@ -53,29 +53,42 @@
 <div class="video-card">
 
 
+
 <video 
 class="short-video"
 controls
 playsinline
- 
 >
 
-<source src="/uploads/{{ video }}">
+
+<source 
+src="/static/uploads/videos/{{ video.filename }}"
+type="video/mp4"
+>
+
 
 </video>
 
 
 
+
 <div class="video-info">
 
-<h3>🌱 Video de jardín</h3>
+
+<h3>
+🌱 {{ video.titulo }}
+</h3>
+
+
 
 <p>
-Comparte tus mejores ideas verdes
+{{ video.descripcion }}
 </p>
 
 
+
 <div class="actions">
+
 
 <button>
 ❤️ 0
@@ -105,6 +118,7 @@ Comparte tus mejores ideas verdes
 {% else %}
 
 
+
 <div class="video-empty">
 
 <h2>
@@ -118,7 +132,9 @@ Sé el primero en compartir tu jardín.
 </div>
 
 
+
 {% endfor %}
+
 
 
 </div>
@@ -131,7 +147,7 @@ Sé el primero en compartir tu jardín.
 <footer>
 
 <p>
-© 2026 JardinTV 
+© 2026 JardinTV 🌿
 </p>
 
 </footer>
