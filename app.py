@@ -29,7 +29,7 @@ def get_db():
 # CARPETA DE VIDEOS
 # =========================
 
-UPLOAD_FOLDER = "/static/uploads/videos"
+UPLOAD_FOLDER = "static/uploads/videos"
 
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
@@ -48,7 +48,7 @@ app.config["MAX_CONTENT_LENGTH"] = 200 * 1024 * 1024
 
 
 # =========================
-# EXTENSIONES PERMITIDAS
+# EXTENSIONES
 # =========================
 
 ALLOWED_EXTENSIONS = {
@@ -71,7 +71,7 @@ def allowed_file(filename):
 
 
 # =========================
-# PAGINA PRINCIPAL
+# INICIO
 # =========================
 
 @app.route("/")
@@ -138,17 +138,14 @@ def upload():
 
         if not allowed_file(video.filename):
 
-            flash(
-                "Solo se permiten videos MP4, MOV o WEBM"
-            )
+            flash("Formato de video no permitido")
 
             return redirect("/upload")
 
 
 
-        # Crear nombre único
-
         extension = os.path.splitext(video.filename)[1]
+
 
         filename = uuid.uuid4().hex + extension
 
@@ -161,7 +158,7 @@ def upload():
 
 
 
-        # Guardar archivo físico
+        # Guardar video en Render
 
         video.save(ruta)
 
@@ -204,14 +201,12 @@ def upload():
 
 
 
-    return render_template(
-        "upload.html"
-    )
+    return render_template("upload.html")
 
 
 
 # =========================
-# MOSTRAR VIDEOS
+# WATCH
 # =========================
 
 @app.route("/watch")
@@ -249,26 +244,9 @@ def watch():
 
 
 # =========================
-# SERVIR VIDEOS
-# =========================
-
-@app.route("/uploads/<filename>")
-def uploaded_file(filename):
-
-    from flask import send_from_directory
-
-
-    return send_from_directory(
-        app.config["UPLOAD_FOLDER"],
-        filename
-    )
-
-
-
-# =========================
-# INICIO
+# ARRANQUE
 # =========================
 
 if __name__ == "__main__":
 
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=5000)
