@@ -20,7 +20,8 @@ def get_db():
         host="MLaguna.mysql.pythonanywhere-services.com",
         user="MLaguna",
         password="VQV4vZ9.%M(Yt9^",
-        database="MLaguna$jardinestv"
+        database="MLaguna$jardinestv",
+         connection_timeout=5
     )
 
 
