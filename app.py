@@ -29,7 +29,7 @@ def get_db():
 # CARPETA DE VIDEOS
 # =========================
 
-UPLOAD_FOLDER = "/home/MLaguna/miguel_lawn_services/static/uploads/videos"
+UPLOAD_FOLDER = "/static/uploads/videos"
 
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
