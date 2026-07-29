@@ -1,8 +1,7 @@
-from flask import Flask, render_template, request, redirect, flash
+from flask import Flask, render_template, request, redirect, flash, send_from_directory
 import os
 import uuid
-import mysql.connector
-from werkzeug.utils import secure_filename
+import requests
 
 
 app = Flask(__name__)
@@ -10,24 +9,9 @@ app = Flask(__name__)
 app.secret_key = "jardintv-secreto"
 
 
-# =========================
-# CONEXION MYSQL
-# =========================
-
-def get_db():
-
-    return mysql.connector.connect(
-        host="MLaguna.mysql.pythonanywhere-services.com",
-        user="MLaguna",
-        password="VQV4vZ9.%M(Yt9^",
-        database="MLaguna$jardinestv",
-         connection_timeout=5
-    )
-
-
 
 # =========================
-# CARPETA DE VIDEOS
+# CARPETA VIDEOS EN RENDER
 # =========================
 
 UPLOAD_FOLDER = "static/uploads/videos"
@@ -42,14 +26,22 @@ os.makedirs(
 
 
 
-# Tamaño máximo 200 MB
+# 200 MB máximo
 
 app.config["MAX_CONTENT_LENGTH"] = 200 * 1024 * 1024
 
 
 
 # =========================
-# EXTENSIONES
+# API PYTHONANYWHERE
+# =========================
+
+API_URL = "https://mlaguna.pythonanywhere.com/api/videos"
+
+
+
+# =========================
+# FORMATOS PERMITIDOS
 # =========================
 
 ALLOWED_EXTENSIONS = {
@@ -65,34 +57,35 @@ def allowed_file(filename):
 
     return (
         "." in filename
-        and filename.rsplit(".", 1)[1].lower()
+        and filename.rsplit(".",1)[1].lower()
         in ALLOWED_EXTENSIONS
     )
 
 
 
 # =========================
-# INICIO
+# PAGINA PRINCIPAL
 # =========================
 
 @app.route("/")
 def inicio():
 
-    db = get_db()
+    try:
 
-    cursor = db.cursor(dictionary=True)
+        respuesta = requests.get(
+            API_URL,
+            timeout=10
+        )
 
-
-    cursor.execute(
-        "SELECT * FROM videos ORDER BY id DESC"
-    )
-
-
-    videos = cursor.fetchall()
+        videos = respuesta.json()
 
 
-    cursor.close()
-    db.close()
+    except Exception as e:
+
+        print(e)
+
+        videos = []
+
 
 
     return render_template(
@@ -106,9 +99,8 @@ def inicio():
 # SUBIR VIDEO
 # =========================
 
-@app.route("/upload", methods=["GET", "POST"])
+@app.route("/upload", methods=["GET","POST"])
 def upload():
-
 
     if request.method == "POST":
 
@@ -123,7 +115,7 @@ def upload():
 
         if not titulo or not video:
 
-            flash("Falta título o video")
+            flash("Faltan datos")
 
             return redirect("/upload")
 
@@ -139,16 +131,25 @@ def upload():
 
         if not allowed_file(video.filename):
 
-            flash("Formato de video no permitido")
+            flash("Formato no permitido")
 
             return redirect("/upload")
 
 
 
-        extension = os.path.splitext(video.filename)[1]
+        extension = os.path.splitext(
+            video.filename
+        )[1].lower()
 
 
-        filename = uuid.uuid4().hex + extension
+
+        # nombre único
+
+        filename = (
+            uuid.uuid4().hex
+            +
+            extension
+        )
 
 
 
@@ -159,81 +160,70 @@ def upload():
 
 
 
-        # Guardar video en Render
+        # guardar video en Render
 
         video.save(ruta)
 
 
 
-        # Guardar datos en MySQL
+        # mandar datos a API
 
-        db = get_db()
+        try:
 
-        cursor = db.cursor()
-
-
-
-        cursor.execute("""
-            INSERT INTO videos
-            (titulo, descripcion, filename)
-            VALUES (%s,%s,%s)
-        """,
-        (
-            titulo,
-            descripcion,
-            filename
-        ))
+            requests.post(
+                API_URL,
+                data={
+                    "titulo": titulo,
+                    "descripcion": descripcion,
+                    "filename": filename
+                },
+                timeout=10
+            )
 
 
+        except Exception as e:
 
-        db.commit()
-
-
-        cursor.close()
-
-        db.close()
+            print(e)
 
 
 
-        flash("Video publicado correctamente")
+        flash(
+            "Video publicado correctamente"
+        )
 
 
         return redirect("/watch")
 
 
 
-    return render_template("upload.html")
+    return render_template(
+        "upload.html"
+    )
 
 
 
 # =========================
-# WATCH
+# VIDEOS
 # =========================
 
 @app.route("/watch")
 def watch():
 
+    try:
 
-    db = get_db()
+        respuesta = requests.get(
+            API_URL,
+            timeout=10
+        )
 
-
-    cursor = db.cursor(dictionary=True)
-
-
-
-    cursor.execute(
-        "SELECT * FROM videos ORDER BY id DESC"
-    )
+        videos = respuesta.json()
 
 
+    except Exception as e:
 
-    videos = cursor.fetchall()
+        print(e)
 
-
-
-    cursor.close()
-
-    db.close()
+        videos = []
 
 
 
@@ -245,9 +235,26 @@ def watch():
 
 
 # =========================
-# ARRANQUE
+# MOSTRAR ARCHIVO VIDEO
+# =========================
+
+@app.route("/uploads/<filename>")
+def uploaded_file(filename):
+
+    return send_from_directory(
+        app.config["UPLOAD_FOLDER"],
+        filename
+    )
+
+
+
+# =========================
+# INICIO SERVIDOR
 # =========================
 
 if __name__ == "__main__":
 
-    app.run(host="0.0.0.0", port=5000)
+    app.run(
+        host="0.0.0.0",
+        port=5000
+    )
