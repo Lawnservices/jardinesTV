@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, flash, send_from_di
 import os
 import uuid
 import requests
+import cv2
 
 
 app = Flask(__name__)
@@ -10,7 +11,7 @@ app.secret_key = "jardintv-secreto"
 
 
 # =========================
-# CARPETA VIDEOS EN RENDER
+# CARPETA VIDEOS
 # =========================
 
 UPLOAD_FOLDER = "static/uploads/videos"
@@ -23,7 +24,24 @@ os.makedirs(
 )
 
 
-# 200 MB máximo
+# =========================
+# CARPETA MINIATURAS
+# =========================
+
+THUMBNAIL_FOLDER = "static/uploads/thumbnails"
+
+app.config["THUMBNAIL_FOLDER"] = THUMBNAIL_FOLDER
+
+os.makedirs(
+    THUMBNAIL_FOLDER,
+    exist_ok=True
+)
+
+
+
+# =========================
+# LIMITE VIDEO
+# =========================
 
 app.config["MAX_CONTENT_LENGTH"] = 200 * 1024 * 1024
 
@@ -38,7 +56,7 @@ API_URL = "https://www.creantunegocio.com/api/videos"
 
 
 # =========================
-# FORMATOS PERMITIDOS
+# FORMATOS
 # =========================
 
 ALLOWED_EXTENSIONS = {
@@ -61,13 +79,43 @@ def allowed_file(filename):
 
 
 # =========================
+# CREAR MINIATURA
+# =========================
+
+def crear_thumbnail(video_path, thumbnail_path):
+
+    try:
+
+        video = cv2.VideoCapture(video_path)
+
+        exito, imagen = video.read()
+
+
+        if exito:
+
+            cv2.imwrite(
+                thumbnail_path,
+                imagen
+            )
+
+
+        video.release()
+
+
+    except Exception as e:
+
+        print("ERROR THUMBNAIL:", e)
+
+
+
+# =========================
 # INICIO
 # =========================
 
 @app.route("/")
 def inicio():
 
-    videos = []
+    videos=[]
 
     try:
 
@@ -76,17 +124,12 @@ def inicio():
             timeout=15
         )
 
-
-        print("API GET:", respuesta.status_code)
-        print(respuesta.text)
-
-
         videos = respuesta.json()
 
 
     except Exception as e:
 
-        print("ERROR GET API:", e)
+        print("ERROR API:", e)
 
 
 
@@ -94,7 +137,6 @@ def inicio():
         "index.html",
         videos=videos
     )
-
 
 
 
@@ -147,7 +189,11 @@ def upload():
 
 
 
-        filename = uuid.uuid4().hex + extension
+        filename = (
+            uuid.uuid4().hex
+            +
+            extension
+        )
 
 
 
@@ -158,18 +204,50 @@ def upload():
 
 
 
-        # Guardar video en Render
+        # guardar video
 
         video.save(ruta)
 
 
-        print("VIDEO GUARDADO:")
+
+        print("VIDEO:")
         print(ruta)
 
 
 
         # =========================
-        # ENVIAR A API
+        # CREAR THUMBNAIL
+        # =========================
+
+        thumbnail = (
+            filename.rsplit(".",1)[0]
+            +
+            ".jpg"
+        )
+
+
+
+        thumbnail_path = os.path.join(
+            app.config["THUMBNAIL_FOLDER"],
+            thumbnail
+        )
+
+
+
+        crear_thumbnail(
+            ruta,
+            thumbnail_path
+        )
+
+
+
+        print("THUMBNAIL:")
+        print(thumbnail_path)
+
+
+
+        # =========================
+        # GUARDAR EN API
         # =========================
 
 
@@ -185,27 +263,28 @@ def upload():
 
                     "descripcion": descripcion,
 
-                    "filename": filename
+                    "filename": filename,
+
+                    "thumbnail": thumbnail
 
                 },
 
                 timeout=15
-
             )
 
 
-            print("API POST STATUS:")
-            print(respuesta.status_code)
-
-
-            print("API POST RESPUESTA:")
-            print(respuesta.text)
+            print(
+                "API:",
+                respuesta.text
+            )
 
 
 
             if respuesta.status_code != 200:
 
-                flash("Error guardando en base de datos")
+                flash(
+                    "Error guardando datos"
+                )
 
                 return redirect("/upload")
 
@@ -214,19 +293,18 @@ def upload():
         except Exception as e:
 
 
-            print("ERROR POST API:")
             print(e)
 
-
-            flash("No se pudo conectar con la API")
+            flash(
+                "Error conectando API"
+            )
 
             return redirect("/upload")
 
 
 
-
         flash(
-            "Video publicado correctamente"
+            "Video publicado"
         )
 
 
@@ -240,7 +318,6 @@ def upload():
 
 
 
-
 # =========================
 # WATCH
 # =========================
@@ -248,12 +325,10 @@ def upload():
 @app.route("/watch")
 def watch():
 
-
-    videos = []
+    videos=[]
 
 
     try:
-
 
         respuesta = requests.get(
             API_URL,
@@ -261,17 +336,11 @@ def watch():
         )
 
 
-        print("WATCH API:")
-        print(respuesta.text)
-
-
         videos = respuesta.json()
-
 
 
     except Exception as e:
 
-        print("ERROR WATCH:")
         print(e)
 
 
@@ -283,23 +352,35 @@ def watch():
 
 
 
-
 # =========================
-# SERVIR VIDEOS
+# VIDEOS
 # =========================
 
 @app.route("/uploads/<filename>")
-def uploaded_file(filename):
-
+def videos(filename):
 
     return send_from_directory(
 
         app.config["UPLOAD_FOLDER"],
 
         filename
-
     )
 
+
+
+# =========================
+# MINIATURAS
+# =========================
+
+@app.route("/thumbnails/<filename>")
+def thumbnails(filename):
+
+    return send_from_directory(
+
+        app.config["THUMBNAIL_FOLDER"],
+
+        filename
+    )
 
 
 
@@ -307,8 +388,7 @@ def uploaded_file(filename):
 # START
 # =========================
 
-if __name__ == "__main__":
-
+if __name__=="__main__":
 
     app.run(
         host="0.0.0.0",

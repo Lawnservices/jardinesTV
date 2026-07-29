@@ -2,6 +2,6 @@ Flask
 gunicorn
 requests
 mysql-connector-python
-
-
+imageio-ffmpeg
+opencv-python-headless
  
