@@ -14,7 +14,7 @@
 // }
 
 async function darLike(id) {
-    const res = await fetch(`https://www.creantunegocio.com/api/videos/${id}`, { method: "POST" });
+    const res = await fetch(`https://www.creantunegocio.com/api/videos/${id}/like`, { method: "POST" });
     const data = await res.json();
 
     const btn = document.getElementById("btnLike");
@@ -35,7 +35,7 @@ async function darLike(id) {
 }
 
 async function cargarLikes(id) {
-    const res = await fetch(`https://www.creantunegocio.com/api/videos/${id}`);
+    const res = await fetch(`https://www.creantunegocio.com/api/videos/${id}/like`);
     const data = await res.json();
     document.getElementById("totalLikes").textContent = data.likes;
 }
