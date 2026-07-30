@@ -27,8 +27,13 @@ const formulario = document.querySelector("form");
 
 formulario.addEventListener("submit", async (e) => {
 
-    e.preventDefault();
+     e.preventDefault();
+    const boton = formulario.querySelector("button");
+    
 
+    boton.disabled = true;
+    boton.innerHTML = "⏳ Subiendo video...";
+     
 
     const titulo = document.getElementById("titulo").value;
     const descripcion = document.getElementById("descripcion").value;
@@ -80,10 +85,12 @@ formulario.addEventListener("submit", async (e) => {
 
 
         formulario.reset();
-
+        boton.disabled = false;
+        boton.innerHTML = "🚀 Publicar video";
 
     } catch(error) {
-
+        boton.disabled = false;
+        boton.innerHTML = "🚀 Publicar video";
         console.log(error);
         alert("Error subiendo video");
 
