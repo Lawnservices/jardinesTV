@@ -3,115 +3,80 @@
 
 <head>
 <meta charset="UTF-8">
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>JardinTV | Videos de Jardines</title>
-
 <link rel="stylesheet" href="/static/style.css">
-
 </head>
 
 <body>
 
 <header class="navbar">
+    <div class="logo">
+        🌿 <span>JardinTV</span>
+    </div>
 
-<div class="logo">
-🌿 <span>JardinTV</span>
-</div>
-
-<nav>
-
-<a href="/">🏠 Inicio</a>
-
-<a href="/upload">📤 Subir video</a>
-
-<a href="/watch">🎥 Videos</a>
-
-</nav>
-
+    <nav>
+        <a href="/">🏠 Inicio</a>
+        <a href="/upload">📤 Subir video</a>
+        <a href="/watch">🎥 Videos</a>
+    </nav>
 </header>
 
 
 <section class="hero">
 
-<h1>Comparte tus jardines con el mundo 🌱</h1>
+    <h1>Comparte tus jardines con el mundo 🌱</h1>
 
-<p>
-Mira videos de jardines, plantas, paisajes y grandes ideas para tu hogar.
-</p>
+    <p>
+        Mira videos de jardines, plantas, paisajes y grandes ideas para tu hogar.
+    </p>
 
-
-<a class="btn" href="/upload">
-📤 Subir mi video
-</a>
-
- 
-<section class="content">
-
-<h2>🎬 Videos recientes</h2>
-
-
-<div class="video-grid">
-
-
-{% for video in videos %}
-
-
-<div class="video-item">
-
-
-<video controls>
-
-<source 
-src="/static/uploads/videos/{{ video.filename }}"
-type="video/mp4"
->
-
-</video>
-
-
-<h3>
-🌿 {{ video.titulo }}
-</h3>
-
-
-<p>
-{{ video.descripcion }}
-</p>
-
-
-</div>
-
-
-{% else %}
-
-
-<p>
-Todavía no hay videos.
-</p>
-
-
-{% endfor %}
-
-
-</div>
-
+    <a class="btn" href="/upload">
+        📤 Subir mi video
+    </a>
 
 </section>
 
- 
+
+<section class="content">
+
+    <h2>🎬 Videos recientes</h2>
+
+    <div class="video-grid">
+
+        {% for video in videos %}
+
+        <div class="video-item">
+
+            <video controls preload="metadata">
+                <source 
+                    src="{{ video.url_video }}"
+                    type="video/mp4">
+                Tu navegador no soporta videos.
+            </video>
+
+            <h3>🌿 {{ video.titulo }}</h3>
+
+            <p>{{ video.descripcion }}</p>
+
+        </div>
+
+        {% else %}
+
+        <p>
+            Todavía no hay videos.
+        </p>
+
+        {% endfor %}
+
+    </div>
+
+</section>
 
 
 <footer>
-
-<p>
-© 2026 JardinTV 🌿 Todos los derechos reservados
-</p>
-
+    <p>© 2026 JardinTV 🌿 Todos los derechos reservados</p>
 </footer>
 
-
 </body>
-
 </html>

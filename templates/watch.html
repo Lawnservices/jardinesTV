@@ -2,179 +2,82 @@
 <html lang="es">
 
 <head>
-
 <meta charset="UTF-8">
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Videos | JardinTV</title>
-
 <link rel="stylesheet" href="/static/style.css">
-
 </head>
-
 
 <body>
 
-
 <header class="navbar">
+    <div class="logo">
+        🌿 <span>JardinTV</span>
+    </div>
 
-<div class="logo">
-🌿 <span>JardinTV</span>
-</div>
-
-
-<nav>
-
-<a href="/">🏠 Inicio</a>
-
-<a href="/upload">📤 Subir video</a>
-
-<a href="/watch">🎥 Videos</a>
-
-</nav>
-
+    <nav>
+        <a href="/">🏠 Inicio</a>
+        <a href="/upload">📤 Subir video</a>
+        <a href="/watch">🎥 Videos</a>
+    </nav>
 </header>
-
-
 
 <section class="videos-page">
 
-
 <h1>🎥 Videos de jardines</h1>
-
-
 
 <div class="video-feed">
 
-
-
 {% for video in videos %}
-
-
 
 <div class="video-card video-container">
 
-<video
-class="short-video"
-controls
-playsinline
-preload="metadata"
- 
->
+    <video
+        class="short-video"
+        controls
+        playsinline
+        preload="metadata">
+        <source src="{{ video.url_video }}" type="video/mp4">
+        Tu navegador no soporta videos.
+    </video>
 
-
-<source
-src="/uploads/{{ video.filename }}"
->
-
-
-Tu navegador no soporta videos.
-
-
-</video>
-
- <div class="botones-video">
+    <div class="botones-video">
         <button>👍</button>
         <button>💬</button>
         <button onclick="compartir()">↗️</button>
         <button>💾</button>
     </div>
 
+    <div class="video-info">
+        <h3>🌱 {{ video.titulo }}</h3>
+        <p>{{ video.descripcion }}</p>
 
-<div class="video-info">
-
-
-
-<h3>
-🌱 {{ video.titulo }}
-</h3>
-
-
-
-<p>
-{{ video.descripcion }}
-</p>
-
-
-
-<div class="actions">
-
-
-<button>
-❤️ 0
-</button>
-
-
-<button>
-💬
-</button>
-
-
-<button>
-📤
-</button>
-
+        <div class="actions">
+            <button>❤️ 0</button>
+            <button>💬</button>
+            <button>📤</button>
+        </div>
+    </div>
 
 </div>
-
-
-</div>
-
-
-</div>
-
-
 
 {% else %}
 
-
-
 <div class="video-empty">
-
-
-<h2>
-🌿 Todavía no hay videos
-</h2>
-
-
-<p>
-Sé el primero en compartir tu jardín.
-</p>
-
-
-<a href="/upload">
-📤 Subir primer video
-</a>
-
-
+    <h2>🌿 Todavía no hay videos</h2>
+    <p>Sé el primero en compartir tu jardín.</p>
+    <a href="/upload">📤 Subir primer video</a>
 </div>
-
-
 
 {% endfor %}
 
-
-
 </div>
-
 
 </section>
 
-
-
-
 <footer>
-
-<p>
-© 2026 JardinTV 🌿
-</p>
-
-
+<p>© 2026 JardinTV 🌿</p>
 </footer>
 
-
-
 </body>
-
 </html>
