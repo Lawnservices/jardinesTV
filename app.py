@@ -5,6 +5,7 @@ import json
 import os
 import firebase_admin
 from firebase_admin import credentials, storage
+import tempfile
 
 app = Flask(__name__)
 app.secret_key = "jardintv-secreto"
@@ -15,11 +16,21 @@ app.secret_key = "jardintv-secreto"
 # =========================
 
 firebase_json = os.getenv("FIREBASE_KEY")
-cred = credentials.Certificate(json.loads(firebase_json))
+# cred = credentials.Certificate(json.loads(firebase_json))
+
+# Crear archivo temporal con el JSON
+with tempfile.NamedTemporaryFile(delete=False, mode="w", suffix=".json") as temp_file:
+    temp_file.write(firebase_json)
+    temp_path = temp_file.name
+
+cred = credentials.Certificate(temp_path)
 
 firebase_admin.initialize_app(cred, {
     "storageBucket": "jardines-4e1db.firebasestorage.app"
 })
+# firebase_admin.initialize_app(cred, {
+#     "storageBucket": "jardines-4e1db.firebasestorage.app"
+# })
 
 # cred = credentials.Certificate("/opt/render/project/src/firebase_key.json")
 # firebase_admin.initialize_app(cred, {
