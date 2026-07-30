@@ -27,44 +27,54 @@ const formulario = document.querySelector("form");
 
 formulario.addEventListener("submit", async (e) => {
 
-     e.preventDefault();
-    const boton = formulario.querySelector("button");
-    
+    e.preventDefault();
 
+    const boton = formulario.querySelector("button");
+
+    // bloquear botón
     boton.disabled = true;
     boton.innerHTML = "⏳ Subiendo video...";
-     
+
 
     const titulo = document.getElementById("titulo").value;
     const descripcion = document.getElementById("descripcion").value;
     const archivo = document.getElementById("video").files[0];
 
 
+    // verificar archivo
     if (!archivo) {
+
         alert("Selecciona un video");
+
+        boton.disabled = false;
+        boton.innerHTML = "🚀 Publicar video";
+
         return;
     }
 
 
     try {
 
-        // nombre único del video
+        // crear nombre único
         const nombreArchivo = Date.now() + "_" + archivo.name;
 
 
-        // carpeta videos en Firebase
-        const referencia = ref(storage, "videos/" + nombreArchivo);
+        // ubicación en Firebase Storage
+        const referencia = ref(
+            storage,
+            "videos/" + nombreArchivo
+        );
 
 
-        // subir video
+        // subir video a Firebase
         await uploadBytes(referencia, archivo);
 
 
-        // obtener URL
+        // obtener URL del video
         const urlVideo = await getDownloadURL(referencia);
 
 
-        // enviar a tu API Flask
+        // enviar datos a Flask
         const datos = new FormData();
 
         datos.append("titulo", titulo);
@@ -72,27 +82,42 @@ formulario.addEventListener("submit", async (e) => {
         datos.append("url_video", urlVideo);
 
 
-        const respuesta = await fetch("https://www.creantunegocio.com/api/videos", {
-            method: "POST",
-            body: datos
-        });
+        const respuesta = await fetch(
+            "https://www.creantunegocio.com/api/videos",
+            {
+                method: "POST",
+                body: datos
+            }
+        );
 
 
         const resultado = await respuesta.json();
 
 
-        alert(resultado.mensaje);
+        if (!respuesta.ok) {
+            throw new Error(resultado.error || "Error guardando video");
+        }
 
 
+        alert("✅ Video publicado correctamente");
+
+
+        // limpiar formulario
         formulario.reset();
-        boton.disabled = false;
-        boton.innerHTML = "🚀 Publicar video";
+
 
     } catch(error) {
+
+        console.error("Error:", error);
+
+        alert("❌ Error subiendo video");
+
+
+    } finally {
+
+        // siempre desbloquear botón
         boton.disabled = false;
         boton.innerHTML = "🚀 Publicar video";
-        console.log(error);
-        alert("Error subiendo video");
 
     }
 
