@@ -53,9 +53,8 @@
         <p>{{ video.descripcion }}</p>
 
         <div class="actions">
-             <button onclick="darLike(5)">
-❤️ Me gusta  <span id="likes-${video.id}">${video.likes}</span>
-</button>
+            <button class="like-btn" id="btnLike" onclick="darLike(12)">❤️ Like</button>
+            <span class="like-count" id="totalLikes">0</span>
             <button>💬</button>
             <button>📤</button>
         </div>
