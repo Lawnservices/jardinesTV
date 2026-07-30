@@ -2,7 +2,6 @@ from flask import Flask, render_template, request, redirect, flash, send_from_di
 import os
 import uuid
 import requests
-import cv2
 
 
 app = Flask(__name__)
@@ -24,20 +23,6 @@ os.makedirs(
 )
 
 
-# =========================
-# CARPETA MINIATURAS
-# =========================
-
-# THUMBNAIL_FOLDER = "static/uploads/thumbnails"
-
-# app.config["THUMBNAIL_FOLDER"] = THUMBNAIL_FOLDER
-
-# os.makedirs(
-#     THUMBNAIL_FOLDER,
-#     exist_ok=True
-# )
-
-
 
 # =========================
 # LIMITE VIDEO
@@ -56,7 +41,7 @@ API_URL = "https://www.creantunegocio.com/api/videos"
 
 
 # =========================
-# FORMATOS
+# FORMATOS PERMITIDOS
 # =========================
 
 ALLOWED_EXTENSIONS = {
@@ -79,43 +64,13 @@ def allowed_file(filename):
 
 
 # =========================
-# CREAR MINIATURA
-# =========================
-
-def crear_thumbnail(video_path, thumbnail_path):
-
-    try:
-
-        video = cv2.VideoCapture(video_path)
-
-        exito, imagen = video.read()
-
-
-        if exito:
-
-            cv2.imwrite(
-                thumbnail_path,
-                imagen
-            )
-
-
-        video.release()
-
-
-    except Exception as e:
-
-        print("ERROR THUMBNAIL:", e)
-
-
-
-# =========================
 # INICIO
 # =========================
 
 @app.route("/")
 def inicio():
 
-    videos=[]
+    videos = []
 
     try:
 
@@ -123,6 +78,8 @@ def inicio():
             API_URL,
             timeout=15
         )
+
+        print("API GET:", respuesta.status_code)
 
         videos = respuesta.json()
 
@@ -146,7 +103,6 @@ def inicio():
 
 @app.route("/upload", methods=["GET","POST"])
 def upload():
-
 
     if request.method == "POST":
 
@@ -204,52 +160,21 @@ def upload():
 
 
 
-        # guardar video
+        # =========================
+        # GUARDAR VIDEO EN RENDER
+        # =========================
 
         video.save(ruta)
 
 
-
-        print("VIDEO:")
+        print("VIDEO GUARDADO:")
         print(ruta)
 
 
 
         # =========================
-        # CREAR THUMBNAIL
+        # GUARDAR DATOS EN API
         # =========================
-
-        thumbnail = (
-            filename.rsplit(".",1)[0]
-            +
-            ".jpg"
-        )
-
-
-
-        thumbnail_path = os.path.join(
-            app.config["THUMBNAIL_FOLDER"],
-            thumbnail
-        )
-
-
-
-        crear_thumbnail(
-            ruta,
-            thumbnail_path
-        )
-
-
-
-        print("THUMBNAIL:")
-        print(thumbnail_path)
-
-
-
-        # =========================
-        # GUARDAR EN API
-        # =========================
-
 
         try:
 
@@ -265,26 +190,21 @@ def upload():
 
                     "filename": filename
 
-                    # "thumbnail": thumbnail
-
                 },
 
                 timeout=15
+
             )
 
 
-            print(
-                "API:",
-                respuesta.text
-            )
+            print("API POST:")
+            print(respuesta.text)
 
 
 
             if respuesta.status_code != 200:
 
-                flash(
-                    "Error guardando datos"
-                )
+                flash("Error guardando datos")
 
                 return redirect("/upload")
 
@@ -292,19 +212,16 @@ def upload():
 
         except Exception as e:
 
+            print("ERROR API POST:", e)
 
-            print(e)
-
-            flash(
-                "Error conectando API"
-            )
+            flash("Error conectando API")
 
             return redirect("/upload")
 
 
 
         flash(
-            "Video publicado"
+            "Video publicado correctamente"
         )
 
 
@@ -325,7 +242,7 @@ def upload():
 @app.route("/watch")
 def watch():
 
-    videos=[]
+    videos = []
 
 
     try:
@@ -339,9 +256,10 @@ def watch():
         videos = respuesta.json()
 
 
+
     except Exception as e:
 
-        print(e)
+        print("ERROR WATCH:", e)
 
 
 
@@ -353,7 +271,7 @@ def watch():
 
 
 # =========================
-# VIDEOS
+# SERVIR VIDEOS
 # =========================
 
 @app.route("/uploads/<filename>")
@@ -364,23 +282,8 @@ def videos(filename):
         app.config["UPLOAD_FOLDER"],
 
         filename
+
     )
-
-
-
-# =========================
-# MINIATURAS
-# =========================
-
-# @app.route("/thumbnails/<filename>")
-# def thumbnails(filename):
-
-#     return send_from_directory(
-
-#         app.config["THUMBNAIL_FOLDER"],
-
-#         filename
-#     )
 
 
 
@@ -388,7 +291,7 @@ def videos(filename):
 # START
 # =========================
 
-if __name__=="__main__":
+if __name__ == "__main__":
 
     app.run(
         host="0.0.0.0",
