@@ -14,7 +14,7 @@ app.secret_key = "jardintv-secreto"
 # CONFIGURAR FIREBASE
 # =========================
 
-cred = credentials.Certificate("firebase_key.json")
+cred = credentials.Certificate("/opt/render/project/src/firebase_key.json")
 firebase_admin.initialize_app(cred, {
     "storageBucket": "jardines-4e1db.firebasestorage.app"
 })
