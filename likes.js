@@ -1,7 +1,7 @@
 async function darLike(id){
 
     const respuesta = await fetch(
-        `/api/videos/${id}/like`,
+        `https://www.creantunegocio.com/api/videos/${id}/like`,
         {
             method:"POST"
         }
