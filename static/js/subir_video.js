@@ -67,7 +67,7 @@ formulario.addEventListener("submit", async (e) => {
         datos.append("url_video", urlVideo);
 
 
-        const respuesta = await fetch("/api/videos", {
+        const respuesta = await fetch("https://www.creantunegocio.com/api/videos", {
             method: "POST",
             body: datos
         });
