@@ -28,14 +28,14 @@ os.makedirs(
 # CARPETA MINIATURAS
 # =========================
 
-THUMBNAIL_FOLDER = "static/uploads/thumbnails"
+# THUMBNAIL_FOLDER = "static/uploads/thumbnails"
 
-app.config["THUMBNAIL_FOLDER"] = THUMBNAIL_FOLDER
+# app.config["THUMBNAIL_FOLDER"] = THUMBNAIL_FOLDER
 
-os.makedirs(
-    THUMBNAIL_FOLDER,
-    exist_ok=True
-)
+# os.makedirs(
+#     THUMBNAIL_FOLDER,
+#     exist_ok=True
+# )
 
 
 
@@ -263,9 +263,9 @@ def upload():
 
                     "descripcion": descripcion,
 
-                    "filename": filename,
+                    "filename": filename
 
-                    "thumbnail": thumbnail
+                    # "thumbnail": thumbnail
 
                 },
 
@@ -372,15 +372,15 @@ def videos(filename):
 # MINIATURAS
 # =========================
 
-@app.route("/thumbnails/<filename>")
-def thumbnails(filename):
+# @app.route("/thumbnails/<filename>")
+# def thumbnails(filename):
 
-    return send_from_directory(
+#     return send_from_directory(
 
-        app.config["THUMBNAIL_FOLDER"],
+#         app.config["THUMBNAIL_FOLDER"],
 
-        filename
-    )
+#         filename
+#     )
 
 
 
