@@ -1,8 +1,8 @@
 from flask import Flask, render_template, request, redirect, flash
-import os
 import uuid
 import requests
-
+import json
+import os
 import firebase_admin
 from firebase_admin import credentials, storage
 
@@ -14,10 +14,17 @@ app.secret_key = "jardintv-secreto"
 # CONFIGURAR FIREBASE
 # =========================
 
-cred = credentials.Certificate("/opt/render/project/src/firebase_key.json")
+firebase_json = os.getenv("FIREBASE_KEY")
+cred = credentials.Certificate(json.loads(firebase_json))
+
 firebase_admin.initialize_app(cred, {
     "storageBucket": "jardines-4e1db.firebasestorage.app"
 })
+
+# cred = credentials.Certificate("/opt/render/project/src/firebase_key.json")
+# firebase_admin.initialize_app(cred, {
+#     "storageBucket": "jardines-4e1db.firebasestorage.app"
+# })
 
 
 # =========================
