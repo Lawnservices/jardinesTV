@@ -461,7 +461,8 @@ footer {
 
 .video-card {
 
-    width:100%;
+   max-width:98%;
+   margin: 24px auto;
 
 }
 
