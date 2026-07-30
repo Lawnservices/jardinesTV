@@ -13,46 +13,33 @@
 
 // }
 
-async function darLike(id) {
+ async function darLike(id){
 
     const res = await fetch(
         `https://www.creantunegocio.com/api/videos/${id}/like`,
         {
-            method: "POST"
+            method:"POST"
         }
     );
 
-    const data = await res.json();
+    if(res.ok){
 
-
-    const btn = document.getElementById("btnLike");
-
-
-    if (res.ok) {
-
-        btn.textContent = "❤️ Gracias";
-        btn.classList.add("disabled");
-        btn.disabled = true;
+        cargarLikes(id);
 
     }
 
-
-    cargarLikes(id);
 }
 
 
-
-async function cargarLikes(id) {
+async function cargarLikes(id){
 
     const res = await fetch(
         `https://www.creantunegocio.com/api/videos/${id}/likess`
     );
 
-
     const data = await res.json();
 
-
-    document.getElementById("totalLikes").textContent = data.likes;
+    document.getElementById(`likes-${id}`).textContent = data.likes;
 
 }
 

@@ -29,8 +29,28 @@
 <div class="video-feed">
 
 {% for video in videos %}
+const html = `
+<div class="video-card">
 
-<div class="video-card video-container">
+    <video controls>
+        <source src="${video.url_video}" type="video/mp4">
+    </video>
+
+    <h3>${video.titulo}</h3>
+
+    <p>${video.descripcion}</p>
+
+    <button class="like-btn" onclick="darLike(${video.id})">
+        ❤️ Like
+    </button>
+
+    <span class="like-count" id="likes-${video.id}">
+        ${video.likes}
+    </span>
+
+</div>
+`;
+<!-- <div class="video-card video-container">
 
     <video
         class="short-video"
@@ -53,14 +73,19 @@
         <p>{{ video.descripcion }}</p>
 
         <div class="actions">
-            <button class="like-btn" id="btnLike" onclick="darLike(12)">❤️ Like</button>
-            <span class="like-count" id="totalLikes">0</span>
+    <button class="like-btn" onclick="darLike(${video.id})">
+        ❤️ Like
+    </button>
+
+    <span class="like-count" id="likes-${video.id}">
+        ${video.likes}
+    </span>
             <button>💬</button>
             <button>📤</button>
         </div>
     </div>
 
-</div>
+</div> -->
 
 {% else %}
 
