@@ -48,7 +48,13 @@
 
         <div class="video-item">
 
-            <video controls preload="metadata">
+            <video controls preload="metadata" poster="{{ video.thumbnail }}"
+    controls
+    controlslist="nodownload noplaybackrate"
+    disablepictureinpicture
+    playsinline
+    preload="metadata">
+                
                 <source 
                     src="{{ video.url_video }}"
                     type="video/mp4">
