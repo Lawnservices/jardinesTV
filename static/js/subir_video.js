@@ -80,7 +80,7 @@ formulario.addEventListener("submit", async (e) => {
         datos.append("titulo", titulo);
         datos.append("descripcion", descripcion);
         datos.append("url_video", urlVideo);
-
+        datos.append("thumbnail", urlThumbnail);
 
         const respuesta = await fetch(
             "https://www.creantunegocio.com/api/videos",

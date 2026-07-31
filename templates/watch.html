@@ -33,13 +33,19 @@
   <div class="video-card video-container">
 
     <video
-        class="short-video"
-        controls
-        playsinline
-        preload="metadata">
-        <source src="{{ video.url_video }}" type="video/mp4">
-        Tu navegador no soporta videos.
-    </video>
+    poster="{{ video.thumbnail }}"
+    controls
+    controlslist="nodownload noplaybackrate"
+    disablepictureinpicture
+    playsinline
+    preload="metadata"
+    class="short-video">
+
+    <source src="{{ video.url_video }}" type="video/mp4">
+
+    Tu navegador no soporta videos.
+
+</video>
 
     <div class="botones-video">
         <button>👍</button>
