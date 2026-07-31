@@ -36,8 +36,6 @@
     </a>
 
 </section>
-
-
 <section class="content">
 
     <h2>🎬 Videos recientes</h2>
@@ -48,40 +46,48 @@
 
         <div class="video-item">
 
-    <video controls preload="metadata" poster="{{ video.thumbnail }}"
-     
-    controlslist="nodownload noplaybackrate"
-    disablepictureinpicture
-    playsinline
-    preload="metadata">
-                
-                <source 
-                    src="{{ video.url_video }}"
-                    type="video/mp4">
+            <video
+                class="short-video"
+                controls
+                poster="{{ video.thumbnail if video.thumbnail else '/static/img/video-default.jpg' }}"
+                preload="metadata"
+                playsinline
+                controlslist="nodownload noplaybackrate"
+                disablepictureinpicture>
+
+                <source src="{{ video.url_video }}" type="video/mp4">
+
                 Tu navegador no soporta videos.
+
             </video>
 
             <h3>🌿 {{ video.titulo }}</h3>
 
             <p>{{ video.descripcion }}</p>
-        <div>
-        <button onclick="darLike()">❤️ Like</button>
-        <button>💬 comentario</button>
-        <button>📤 Compartir</button>
-        </div>
+
+            <div>
+
+                <button onclick="darLike({{ video.id }})">❤️ Like</button>
+
+                <button>💬 Comentario</button>
+
+                <button>📤 Compartir</button>
+
+            </div>
+
         </div>
 
         {% else %}
 
-        <p>
-            Todavía no hay videos.
-        </p>
+        <p>Todavía no hay videos.</p>
 
         {% endfor %}
 
     </div>
 
 </section>
+
+ 
 
 
 <footer>
