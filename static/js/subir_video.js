@@ -1,5 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { 
+
+import {
     getStorage,
     ref,
     uploadBytes,
@@ -8,12 +9,14 @@ import {
 
 
 const firebaseConfig = {
+
     apiKey: "AIzaSyBEfiq790QMhU64qIuIhabh2Rq_Ll4Dgtk",
     authDomain: "jardines-4e1db.firebaseapp.com",
     projectId: "jardines-4e1db",
     storageBucket: "jardines-4e1db.firebasestorage.app",
     messagingSenderId: "226365823853",
     appId: "1:226365823853:web:1634bdc66bc2cc12b91864"
+
 };
 
 
@@ -25,100 +28,286 @@ const storage = getStorage(app);
 const formulario = document.querySelector("form");
 
 
-formulario.addEventListener("submit", async (e) => {
 
-    e.preventDefault();
+// =============================
+// CREAR THUMBNAIL
+// =============================
 
-    const boton = formulario.querySelector("button");
+function crearThumbnail(videoFile){
 
-    // bloquear botón
-    boton.disabled = true;
-    boton.innerHTML = "⏳ Subiendo video...";
-
-
-    const titulo = document.getElementById("titulo").value;
-    const descripcion = document.getElementById("descripcion").value;
-    const archivo = document.getElementById("video").files[0];
+    return new Promise((resolve)=>{
 
 
-    // verificar archivo
-    if (!archivo) {
+        const video = document.createElement("video");
 
-        alert("Selecciona un video");
+        video.src = URL.createObjectURL(videoFile);
 
-        boton.disabled = false;
-        boton.innerHTML = "🚀 Publicar video";
-
-        return;
-    }
+        video.currentTime = 1;
 
 
-    try {
+        video.onloadeddata = ()=>{
 
-        // crear nombre único
-        const nombreArchivo = Date.now() + "_" + archivo.name;
+            const canvas=document.createElement("canvas");
 
+            canvas.width=video.videoWidth;
 
-        // ubicación en Firebase Storage
-        const referencia = ref(
-            storage,
-            "videos/" + nombreArchivo
-        );
+            canvas.height=video.videoHeight;
 
 
-        // subir video a Firebase
-        await uploadBytes(referencia, archivo);
+            const ctx=canvas.getContext("2d");
 
 
-        // obtener URL del video
-        const urlVideo = await getDownloadURL(referencia);
+            ctx.drawImage(
+                video,
+                0,
+                0,
+                canvas.width,
+                canvas.height
+            );
 
 
-        // enviar datos a Flask
-        const datos = new FormData();
+            canvas.toBlob((blob)=>{
 
-        datos.append("titulo", titulo);
-        datos.append("descripcion", descripcion);
-        datos.append("url_video", urlVideo);
-        datos.append("thumbnail", urlThumbnail);
+                resolve(blob);
 
-        const respuesta = await fetch(
-            "https://www.creantunegocio.com/api/videos",
-            {
-                method: "POST",
-                body: datos
-            }
-        );
+            },"image/jpeg",0.90);
 
 
-        const resultado = await respuesta.json();
+        };
 
 
-        if (!respuesta.ok) {
-            throw new Error(resultado.error || "Error guardando video");
-        }
+    });
+
+}
 
 
-        alert("✅ Video publicado correctamente");
 
 
-        // limpiar formulario
-        formulario.reset();
+
+formulario.addEventListener("submit", async(e)=>{
 
 
-    } catch(error) {
-
-        console.error("Error:", error);
-
-        alert("❌ Error subiendo video");
+e.preventDefault();
 
 
-    } finally {
+const boton=formulario.querySelector("button");
 
-        // siempre desbloquear botón
-        boton.disabled = false;
-        boton.innerHTML = "🚀 Publicar video";
 
-    }
+boton.disabled=true;
+
+boton.innerHTML="⏳ Subiendo video...";
+
+
+
+const titulo=document.getElementById("titulo").value;
+
+const descripcion=document.getElementById("descripcion").value;
+
+const archivo=document.getElementById("video").files[0];
+
+
+
+if(!archivo){
+
+alert("Selecciona un video");
+
+boton.disabled=false;
+
+return;
+
+}
+
+
+
+try{
+
+
+// =============================
+// NOMBRE UNICO
+// =============================
+
+const id=Date.now();
+
+
+
+// =============================
+// CREAR THUMBNAIL
+// =============================
+
+
+boton.innerHTML="🖼️ Creando miniatura...";
+
+
+const imagenThumbnail=await crearThumbnail(archivo);
+
+
+
+// =============================
+// SUBIR VIDEO FIREBASE
+// =============================
+
+
+boton.innerHTML="📹 Subiendo video...";
+
+
+const videoRef=ref(
+
+storage,
+
+"videos/"+id+"_"+archivo.name
+
+);
+
+
+
+await uploadBytes(
+
+videoRef,
+
+archivo
+
+);
+
+
+
+const urlVideo=await getDownloadURL(videoRef);
+
+
+
+
+
+// =============================
+// SUBIR THUMBNAIL FIREBASE
+// =============================
+
+
+const thumbnailRef=ref(
+
+storage,
+
+"thumbnails/"+id+".jpg"
+
+);
+
+
+
+await uploadBytes(
+
+thumbnailRef,
+
+imagenThumbnail
+
+);
+
+
+
+const urlThumbnail=await getDownloadURL(thumbnailRef);
+
+
+
+
+// =============================
+// ENVIAR API
+// =============================
+
+
+boton.innerHTML="💾 Guardando...";
+
+
+const datos=new FormData();
+
+
+datos.append(
+"titulo",
+titulo
+);
+
+
+datos.append(
+"descripcion",
+descripcion
+);
+
+
+datos.append(
+"url_video",
+urlVideo
+);
+
+
+datos.append(
+"thumbnail",
+urlThumbnail
+);
+
+
+
+const respuesta=await fetch(
+
+"https://www.creantunegocio.com/api/videos",
+
+{
+
+method:"POST",
+
+body:datos
+
+}
+
+);
+
+
+
+const resultado=await respuesta.json();
+
+
+
+if(!respuesta.ok){
+
+throw new Error(
+resultado.error
+);
+
+}
+
+
+
+alert(
+"✅ Video publicado correctamente"
+);
+
+
+
+formulario.reset();
+
+
+
+}
+catch(error){
+
+
+console.error(
+"ERROR:",
+error
+);
+
+
+alert(
+"❌ Error subiendo video"
+);
+
+
+}
+finally{
+
+
+boton.disabled=false;
+
+boton.innerHTML="🚀 Publicar video";
+
+
+}
+
+
 
 });
