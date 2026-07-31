@@ -6,9 +6,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Videos | JardinTV</title>
 <link rel="stylesheet" href="/static/style.css">
-  
-
- 
 </head>
 
 <body>
@@ -43,18 +40,12 @@
     playsinline
     preload="metadata"
     class="short-video">
-     <div class="controls">
-        <!-- Tus botones personalizados -->
-        <button>Play</button>
-        <button>Pause</button>
-    </div>
+    
     <source src="{{ video.url_video }}" type="video/mp4">
 
     Tu navegador no soporta videos.
 
-<div class="video-wrapper">
-
-    <video id="video"></video>
+</video>
 
     <div class="botones-video">
         <button>👍</button>
@@ -68,15 +59,13 @@
         <p>{{ video.descripcion }}</p>
 
         <div class="actions">
-            <button onclick="darLike()">❤️ Like</button>
-            <button>💬 comentario</button>
-            <button>📤 Compartir</button>
+        <button onclick="darLike()">❤️ Like</button>
+        <button>💬 comentario</button>
+        <button>📤 Compartir</button>
         </div>
     </div>
 
-</div>
-
-
+</div> 
 
 {% else %}
 
