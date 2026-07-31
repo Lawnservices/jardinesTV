@@ -385,11 +385,16 @@ footer {
 
     width:100%;
 
-    height:600px;
+    /* height:600px; */
 
     object-fit:cover;
 
     background:black;
+     height:auto;
+    aspect-ratio:9/16;
+    object-fit:cover;
+    border-radius:12px;
+    background:#000;
 
 }
 
