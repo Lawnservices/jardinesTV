@@ -36,11 +36,11 @@
     </a>
 
 </section>
-<section class="content">
+ <section class="content">
 
     <h2>🎬 Videos recientes</h2>
 
-    <div>
+    <div class="videos-grid">
 
         {% for video in videos %}
 
@@ -65,9 +65,9 @@
 
             <p>{{ video.descripcion }}</p>
 
-            <div>
+            <div class="video-actions">
 
-                <button class="actions">❤️ Like</button>
+                <button>❤️ Like</button>
 
                 <button>💬 Comentario</button>
 
@@ -86,7 +86,6 @@
     </div>
 
 </section>
-
  
 
 
