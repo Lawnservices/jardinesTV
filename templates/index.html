@@ -42,7 +42,7 @@
 
     <h2>🎬 Videos recientes</h2>
 
-    <div class="video-grid">
+    <div>
 
         {% for video in videos %}
 
@@ -64,7 +64,11 @@
             <h3>🌿 {{ video.titulo }}</h3>
 
             <p>{{ video.descripcion }}</p>
-
+            <div class="actions">
+        <button onclick="darLike()">❤️ Like</button>
+        <button>💬 comentario</button>
+        <button>📤 Compartir</button>
+        </div>
         </div>
 
         {% else %}
