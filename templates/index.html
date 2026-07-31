@@ -92,6 +92,35 @@
 <footer>
     <p>© 2026 JardinTV 🌿 Todos los derechos reservados</p>
 </footer>
+ 
 
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
+<script>
+    // 1. SDK de Firebase (asegúrate de tenerlo en tu HTML)
+ 
+
+// 2. Configuración real de tu proyecto
+const firebaseConfig = {
+  apiKey: "TU_API_KEY_REAL",
+  authDomain: "jardines-4e1db.firebaseapp.com",
+  projectId: "jardines-4e1db",
+  storageBucket: "jardines-4e1db.appspot.com",
+};
+
+// 3. Inicializar Firebase
+firebase.initializeApp(firebaseConfig);
+
+// 4. Iniciar sesión con tu usuario de Firebase Authentication
+firebase.auth()
+  .signInWithEmailAndPassword("miguellaguna51@gmail.com", "Lagunas14789")
+  .then(user => {
+      console.log("Sesión iniciada. UID:", user.user.uid);
+  })
+  .catch(error => {
+      console.error("Error al iniciar sesión:", error);
+  });
+
+</script>
 </body>
 </html>

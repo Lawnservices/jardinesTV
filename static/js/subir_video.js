@@ -33,9 +33,9 @@ const formulario = document.querySelector("form");
 // CREAR THUMBNAIL
 // =============================
 
-function crearThumbnail(videoFile){
+function crearThumbnail(videoFile) {
 
-    return new Promise((resolve)=>{
+    return new Promise((resolve) => {
 
 
         const video = document.createElement("video");
@@ -45,16 +45,16 @@ function crearThumbnail(videoFile){
         video.currentTime = 1;
 
 
-        video.onloadeddata = ()=>{
+        video.onloadeddata = () => {
 
-            const canvas=document.createElement("canvas");
+            const canvas = document.createElement("canvas");
 
-            canvas.width=video.videoWidth;
+            canvas.width = video.videoWidth;
 
-            canvas.height=video.videoHeight;
+            canvas.height = video.videoHeight;
 
 
-            const ctx=canvas.getContext("2d");
+            const ctx = canvas.getContext("2d");
 
 
             ctx.drawImage(
@@ -66,11 +66,11 @@ function crearThumbnail(videoFile){
             );
 
 
-            canvas.toBlob((blob)=>{
+            canvas.toBlob((blob) => {
 
                 resolve(blob);
 
-            },"image/jpeg",0.90);
+            }, "image/jpeg", 0.90);
 
 
         };
@@ -84,230 +84,232 @@ function crearThumbnail(videoFile){
 
 
 
-formulario.addEventListener("submit", async(e)=>{
+formulario.addEventListener("submit", async (e) => {
 
 
-e.preventDefault();
+    e.preventDefault();
 
 
-const boton=formulario.querySelector("button");
+    const boton = formulario.querySelector("button");
 
 
-boton.disabled=true;
+    boton.disabled = true;
 
-boton.innerHTML="⏳ Subiendo video...";
+    boton.innerHTML = "⏳ Subiendo video...";
 
 
 
-const titulo=document.getElementById("titulo").value;
+    const titulo = document.getElementById("titulo").value;
 
-const descripcion=document.getElementById("descripcion").value;
+    const descripcion = document.getElementById("descripcion").value;
 
-const archivo=document.getElementById("video").files[0];
+    const archivo = document.getElementById("video").files[0];
 
 
 
-if(!archivo){
+    if (!archivo) {
 
-alert("Selecciona un video");
+        alert("Selecciona un video");
 
-boton.disabled=false;
+        boton.disabled = false;
 
-return;
+        return;
 
-}
+    }
 
 
 
-try{
+    try {
 
 
-// =============================
-// NOMBRE UNICO
-// =============================
+        // =============================
+        // NOMBRE UNICO
+        // =============================
 
-const id=Date.now();
+        const id = Date.now();
 
 
 
-// =============================
-// CREAR THUMBNAIL
-// =============================
+        // =============================
+        // CREAR THUMBNAIL
+        // =============================
 
 
-boton.innerHTML="🖼️ Creando miniatura...";
+        boton.innerHTML = "🖼️ Creando miniatura...";
 
 
-const imagenThumbnail=await crearThumbnail(archivo);
+        const imagenThumbnail = await crearThumbnail(archivo);
 
 
 
-// =============================
-// SUBIR VIDEO FIREBASE
-// =============================
+        // =============================
+        // SUBIR VIDEO FIREBASE
+        // =============================
 
 
-boton.innerHTML="📹 Subiendo video...";
+        boton.innerHTML = "📹 Subiendo video...";
 
 
-const videoRef=ref(
+        const videoRef = ref(
 
-storage,
+            storage,
 
-"videos/"+id+"_"+archivo.name
+            "videos/" + id + "_" + archivo.name
 
-);
+        );
 
 
 
-await uploadBytes(
+        await uploadBytes(
 
-videoRef,
+            videoRef,
 
-archivo
+            archivo
 
-);
+        );
 
 
 
-const urlVideo=await getDownloadURL(videoRef);
+        const urlVideo = await getDownloadURL(videoRef);
 
 
 
 
 
-// =============================
-// SUBIR THUMBNAIL FIREBASE
-// =============================
+        // =============================
+        // SUBIR THUMBNAIL FIREBASE
+        // =============================
 
 
-const thumbnailRef=ref(
+        const thumbnailRef = ref(
 
-storage,
+            storage,
 
-"thumbnails/"+id+".jpg"
+            "thumbnails/" + id + ".jpg"
 
-);
+        );
 
 
 
-await uploadBytes(
+        await uploadBytes(
 
-thumbnailRef,
+            thumbnailRef,
 
-imagenThumbnail
+            imagenThumbnail
 
-);
+        );
 
 
 
-const urlThumbnail=await getDownloadURL(thumbnailRef);
+        const urlThumbnail = await getDownloadURL(thumbnailRef);
 
 
 
 
-// =============================
-// ENVIAR API
-// =============================
+        // =============================
+        // ENVIAR API
+        // =============================
 
 
-boton.innerHTML="💾 Guardando...";
+        boton.innerHTML = "💾 Guardando...";
 
 
-const datos=new FormData();
+        const datos = new FormData();
 
 
-datos.append(
-"titulo",
-titulo
-);
+        datos.append(
+            "titulo",
+            titulo
+        );
 
 
-datos.append(
-"descripcion",
-descripcion
-);
+        datos.append(
+            "descripcion",
+            descripcion
+        );
 
 
-datos.append(
-"url_video",
-urlVideo
-);
+        datos.append(
+            "url_video",
+            urlVideo
+        );
 
 
-datos.append(
-"thumbnail",
-urlThumbnail
-);
+        datos.append(
+            "thumbnail",
+            urlThumbnail
+        );
 
 
 
-const respuesta=await fetch(
+        const respuesta = await fetch(
 
-"https://www.creantunegocio.com/api/videos",
+            "https://www.creantunegocio.com/api/videos",
 
-{
+            {
 
-method:"POST",
+                method: "POST",
 
-body:datos
+                body: datos
 
-}
+            }
 
-);
+        );
 
 
 
-const resultado=await respuesta.json();
+        const resultado = await respuesta.json();
 
 
 
-if(!respuesta.ok){
+        if (!respuesta.ok) {
 
-throw new Error(
-resultado.error
-);
+            throw new Error(
+                resultado.error
+            );
 
-}
+        }
 
 
 
-alert(
-"✅ Video publicado correctamente"
-);
+        alert(
+            "✅ Video publicado correctamente"
+        );
 
 
 
-formulario.reset();
+        formulario.reset();
 
 
 
-}
-catch(error){
+    }
+    catch (error) {
 
 
-console.error(
-"ERROR:",
-error
-);
+        console.error(
+            "ERROR:",
+            error
+        );
 
 
-alert(
-"❌ Error subiendo video"
-);
+        alert(
+            "❌ Error subiendo video"
+        );
 
 
-}
-finally{
+    }
+    finally {
 
 
-boton.disabled=false;
+        boton.disabled = false;
 
-boton.innerHTML="🚀 Publicar video";
+        boton.innerHTML = "🚀 Publicar video";
 
 
-}
+    }
 
 
 
 });
+
+ 
