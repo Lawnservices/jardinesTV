@@ -1,4 +1,4 @@
-html, body {
+/* html, body {
     margin:0;
     padding:0;
     background:black;
@@ -41,4 +41,18 @@ html, body {
     left:20px;
     color:white;
 
+} */
+
+.short {
+  height: 100vh;        /* cada video ocupa toda la pantalla */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: black;
+}
+
+.short video {
+  height: 100%;
+  width: auto;
+  object-fit: cover;
 }
