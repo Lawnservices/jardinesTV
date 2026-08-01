@@ -404,6 +404,37 @@ def watch():
         videos=videos
     )
 
+# prueva
+@app.route("/shorts")
+def shorts():
+
+    videos=[]
+
+
+    try:
+
+        respuesta=requests.get(
+            API_URL,
+            timeout=15
+        )
+
+
+        videos=respuesta.json()
+
+
+    except Exception as e:
+
+        print(
+            "ERROR WATCH:",
+            e
+        )
+
+
+
+    return render_template(
+        "watch.html",
+        videos=videos
+    )
 
 
 
