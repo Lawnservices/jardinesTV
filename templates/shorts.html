@@ -22,65 +22,32 @@
     </nav>
 </header>
 
-<section class="videos-page">
-
-<h1>🎥 Videos de jardines</h1>
-
-<div class="video-feed">
-
-{% for video in videos %}
  
-<div class="video-feed">
+<div class="tiktok-feed">
 
 {% for video in videos %}
 
-<div class="video-container">
+<section class="tiktok-video">
 
     <video 
-        class="short-video"
+        class="video-player"
+        src="{{ video.url_video }}"
         poster="{{ video.thumbnail }}"
         muted
         playsinline
-        preload="metadata">
-
-        <source src="{{ video.url_video }}" type="video/mp4">
-
-        Tu navegador no soporta videos.
-
+        loop>
     </video>
 
-
-    <div class="video-info">
-
-        <h3>🌱 {{ video.titulo }}</h3>
-
+    <div class="info">
+        <h2>🌱 {{ video.titulo }}</h2>
         <p>{{ video.descripcion }}</p>
-
     </div>
-
-</div>
-
-{% endfor %}
-
-</div>
-
-
- 
-
-{% else %}
-
-<div class="video-empty">
-    <h2>🌿 Todavía no hay videos</h2>
-    <p>Sé el primero en compartir tu jardín.</p>
-    <a href="/upload">📤 Subir primer video</a>
-</div>
-
-{% endfor %}
-
-</div>
 
 </section>
 
+{% endfor %}
+
+</div>
 <footer>
 <p>© 2026 JardinTV 🌿</p>
 </footer>

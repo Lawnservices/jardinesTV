@@ -1,23 +1,16 @@
-document.addEventListener("DOMContentLoaded",()=>{
-
-
-const videos = document.querySelectorAll(".short-video");
+const videos = document.querySelectorAll(".video-player");
 
 
 const observer = new IntersectionObserver((entries)=>{
 
-
 entries.forEach(entry=>{
-
 
 const video = entry.target;
 
 
 if(entry.isIntersecting){
 
-    video.play()
-    .catch(()=>{});
-
+    video.play();
 
 }else{
 
@@ -26,25 +19,16 @@ if(entry.isIntersecting){
 
 }
 
-
 });
 
 
 },{
-
-threshold:0.75
-
+threshold:0.8
 });
-
 
 
 videos.forEach(video=>{
 
 observer.observe(video);
-
-
-});
-
-
 
 });
