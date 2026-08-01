@@ -1,0 +1,15 @@
+body{
+    margin:0;
+    background:rgb(233, 220, 220);
+}
+
+.video-container{
+    height:100vh;
+    scroll-snap-align:start;
+}
+
+.video{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
