@@ -1,20 +1,28 @@
-const videos = document.querySelectorAll(".video");
+document.addEventListener("DOMContentLoaded",()=>{
+
+
+const videos = document.querySelectorAll(".short-video");
 
 
 const observer = new IntersectionObserver((entries)=>{
 
+
 entries.forEach(entry=>{
 
-let video = entry.target;
+
+const video = entry.target;
 
 
 if(entry.isIntersecting){
 
-video.play();
+    video.play()
+    .catch(()=>{});
+
 
 }else{
 
-video.pause();
+    video.pause();
+    video.currentTime = 0;
 
 }
 
@@ -23,10 +31,20 @@ video.pause();
 
 
 },{
-threshold:0.8
+
+threshold:0.75
+
 });
 
 
+
 videos.forEach(video=>{
+
 observer.observe(video);
+
+
+});
+
+
+
 });

@@ -32,31 +32,40 @@
  
 <div class="video-feed">
 
-    <div class="video-container">
+{% for video in videos %}
 
-        <video 
-        class="video"
+<div class="video-container">
+
+    <video 
+        class="short-video"
         poster="{{ video.thumbnail }}"
         muted
         playsinline
         preload="metadata">
 
-            <source src="{{ video.url_video }}" type="video/mp4">
+        <source src="{{ video.url_video }}" type="video/mp4">
 
-        </video>
+        Tu navegador no soporta videos.
+
+    </video>
 
 
-        <div class="video-info">
+    <div class="video-info">
 
-            <h3>🌱 {{ video.titulo }}</h3>
+        <h3>🌱 {{ video.titulo }}</h3>
 
-            <p>{{ video.descripcion }}</p>
-
-        </div>
+        <p>{{ video.descripcion }}</p>
 
     </div>
 
-</div> 
+</div>
+
+{% endfor %}
+
+</div>
+
+
+<script src="/static/js/video-feed.js"></script>
 
 {% else %}
 
