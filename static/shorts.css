@@ -1,15 +1,28 @@
-body{
-    margin:0;
-    background:rgb(233, 220, 220);
+.video-feed {
+    height:100vh;
+    overflow-y:scroll;
+    scroll-snap-type:y mandatory;
 }
 
-.video-container{
+
+.video-container {
     height:100vh;
+    width:100%;
+    position:relative;
     scroll-snap-align:start;
 }
 
-.video{
+
+.video {
     width:100%;
     height:100%;
     object-fit:cover;
+}
+
+
+.video-info {
+    position:absolute;
+    bottom:40px;
+    left:20px;
+    color:white;
 }

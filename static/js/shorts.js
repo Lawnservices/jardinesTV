@@ -1,10 +1,12 @@
 const videos = document.querySelectorAll(".video");
 
+
 const observer = new IntersectionObserver((entries)=>{
 
 entries.forEach(entry=>{
 
-const video = entry.target;
+let video = entry.target;
+
 
 if(entry.isIntersecting){
 
@@ -16,10 +18,12 @@ video.pause();
 
 }
 
+
 });
 
+
 },{
-threshold:0.7
+threshold:0.8
 });
 
 

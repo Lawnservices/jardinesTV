@@ -30,30 +30,33 @@
 
 {% for video in videos %}
  
-<div class="video-container">
+<div class="video-feed">
 
-    <video class="video";
-    poster="{{ video.thumbnail }}"
-    controls
-    controlslist="nodownload noplaybackrate"
-    disablepictureinpicture
-    playsinline
-    preload="metadata"
-    class="short-video">
-    
-    <source src="{{ video.url_video }}" type="video/mp4">
+    <div class="video-container">
 
-    Tu navegador no soporta videos.
+        <video 
+        class="video"
+        poster="{{ video.thumbnail }}"
+        muted
+        playsinline
+        preload="metadata">
 
-</video>
+            <source src="{{ video.url_video }}" type="video/mp4">
 
-    
+        </video>
 
-    <div class="video-info">
-        <h3>🌱 {{ video.titulo }}</h3>
-        <p>{{ video.descripcion }}</p>
 
-    </div> 
+        <div class="video-info">
+
+            <h3>🌱 {{ video.titulo }}</h3>
+
+            <p>{{ video.descripcion }}</p>
+
+        </div>
+
+    </div>
+
+</div> 
 
 {% else %}
 
