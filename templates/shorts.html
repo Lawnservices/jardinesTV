@@ -2,73 +2,68 @@
 <html lang="es">
 
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Videos | JardinTV</title>
+  <title>Videos | JardinTV</title>
 
-<link rel="stylesheet" href="/static/shorts.css">
+  <link rel="stylesheet" href="/static/shorts.css">
 
 </head>
 
 <body>
 
 
-<div class="video-feed">
+  <div class="video-feed">
 
 
-{% for video in videos %}
+    {% for video in videos %}
 
 
-<div class="video-container">
+    <div class="video-container">
 
 
-<video 
-class="short-video"
-poster="{{ video.thumbnail }}"
-playsinline
-webkit-playsinline
-controls
-preload="metadata">
+      <video class="short-video" poster="{{ video.thumbnail }}" playsinline webkit-playsinline controls
+        preload="metadata">
 
 
-<source src="{{ video.url_video }}" type="video/mp4">
+        <source src="{{ video.url_video }}" type="video/mp4">
 
-</video>
+      </video>
 
 
 
-<div class="video-info">
+      <div class="video-info">
 
-<h3>🌱 {{ video.titulo }}</h3>
+        <h3>🌱 {{ video.titulo }}</h3>
 
-<p>{{ video.descripcion }}</p>
+        <p>{{ video.descripcion }}</p>
 
-</div>
-
-
-
-</div>
-
-
-{% else %}
-
-
-<div class="video-empty">
-
-<h2>No hay videos todavía</h2>
-
-</div>
-
-
-{% endfor %}
-
-
-</div>
+      </div>
 
 
 
-<script src="/static/js/shorts.js"></script>
+    </div>
+
+
+    {% else %}
+
+
+    <div class="video-empty">
+
+      <h2>No hay videos todavía</h2>
+
+    </div>
+
+
+    {% endfor %}
+
+
+  </div>
+
+
+
+  <script src="/static/js/shorts.js"></script>
 
 
 </body>
