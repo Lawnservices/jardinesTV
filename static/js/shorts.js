@@ -1,4 +1,4 @@
-<script>
+ 
 
 const videos = document.querySelectorAll(".short-video");
 
@@ -79,4 +79,4 @@ video.pause();
 });
 
 
-</script>
+ 
