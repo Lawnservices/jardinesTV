@@ -21,18 +21,82 @@
         <a href="/watch">🎥 Videos</a>
     </nav>
 </header>
-<div class="short">
-  <video src="https://firebasestorage.googleapis.com/v0/b/jardines-4e1db.firebasestorage.app/o/videos%2F1785546965155_Disfrutemos%20de%20unas%20pizzas%20juntos.mp4?alt=media&token=bf1629aa-4581-4bd0-9eac-0ee26cb461a6" muted playsinline></video>
+ <section class="videos-page">
+
+<h1>🎥 Videos de jardines</h1>
+
+<div class="video-feed">
+
+{% for video in videos %}
+
+<div class="video-card video-container">
+
+    <video 
+        poster="{{ video.thumbnail }}"
+        controls
+        controlslist="nodownload noplaybackrate"
+        disablepictureinpicture
+        playsinline
+        webkit-playsinline
+        muted
+        preload="metadata"
+        class="short-video">
+
+        <source src="{{ video.url_video }}" type="video/mp4">
+
+        Tu navegador no soporta videos.
+
+    </video>
+
+
+    <div class="botones-video">
+
+        <button>👍</button>
+        <button>💬</button>
+        <button onclick="compartir()">↗️</button>
+        <button>💾</button>
+
+    </div>
+
+
+    <div class="video-info">
+
+        <h3>🌱 {{ video.titulo }}</h3>
+
+        <p>{{ video.descripcion }}</p>
+
+
+        <div class="actions">
+
+            <button>❤️ Like</button>
+            <button>💬 comentario</button>
+            <button>📤 Compartir</button>
+
+        </div>
+
+    </div>
+
 </div>
 
-<div class="short">
-  <video src="https://firebasestorage.googleapis.com/v0/b/jardines-4e1db.firebasestorage.app/o/videos%2F1785542533522_2026-06-21%2012-59-22.mp4?alt=media&token=60022881-3700-440d-a27b-8c087ca523b7" muted playsinline></video>
+
+{% else %}
+
+<div class="video-empty">
+
+<h2>🌿 Todavía no hay videos</h2>
+
+<p>Sé el primero en compartir tu jardín.</p>
+
+<a href="/upload">📤 Subir primer video</a>
+
 </div>
 
-<div class="short">
-  <video src="https://firebasestorage.googleapis.com/v0/b/jardines-4e1db.firebasestorage.app/o/videos%2F1785539866173_prueba.mp4?alt=media&token=71d2e16c-6782-4bec-adc1-98ce64c5079d" muted playsinline></video>
+{% endfor %}
+
+
 </div>
 
+</section>
  
 <footer>
 <p>© 2026 JardinTV 🌿</p>

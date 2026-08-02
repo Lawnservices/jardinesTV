@@ -29,53 +29,71 @@
 <div class="video-feed">
 
 {% for video in videos %}
- 
+
 <div class="video-card video-container">
 
     <video 
-    poster="{{ video.thumbnail }}"
-    controls
-    controlslist="nodownload noplaybackrate"
-    disablepictureinpicture
-    playsinline
-    preload="metadata"
-    class="short-video">
-    
-    <source src="{{ video.url_video }}" type="video/mp4">
+        poster="{{ video.thumbnail }}"
+        controls
+        controlslist="nodownload noplaybackrate"
+        disablepictureinpicture
+        playsinline
+        webkit-playsinline
+        muted
+        preload="metadata"
+        class="short-video">
 
-    Tu navegador no soporta videos.
+        <source src="{{ video.url_video }}" type="video/mp4">
 
-</video>
+        Tu navegador no soporta videos.
+
+    </video>
+
 
     <div class="botones-video">
+
         <button>👍</button>
         <button>💬</button>
         <button onclick="compartir()">↗️</button>
         <button>💾</button>
+
     </div>
+
 
     <div class="video-info">
+
         <h3>🌱 {{ video.titulo }}</h3>
+
         <p>{{ video.descripcion }}</p>
 
+
         <div class="actions">
-        <button>❤️ Like</button>
-        <button>💬 comentario</button>
-        <button>📤 Compartir</button>
+
+            <button>❤️ Like</button>
+            <button>💬 comentario</button>
+            <button>📤 Compartir</button>
+
         </div>
+
     </div>
 
-</div> 
+</div>
+
 
 {% else %}
 
 <div class="video-empty">
-    <h2>🌿 Todavía no hay videos</h2>
-    <p>Sé el primero en compartir tu jardín.</p>
-    <a href="/upload">📤 Subir primer video</a>
+
+<h2>🌿 Todavía no hay videos</h2>
+
+<p>Sé el primero en compartir tu jardín.</p>
+
+<a href="/upload">📤 Subir primer video</a>
+
 </div>
 
 {% endfor %}
+
 
 </div>
 

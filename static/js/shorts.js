@@ -1,51 +1,82 @@
-// const videos = document.querySelectorAll(".video-player");
+<script>
+
+const videos = document.querySelectorAll(".short-video");
 
 
-// const observer = new IntersectionObserver((entries)=>{
-
-// entries.forEach(entry=>{
-
-// const video = entry.target;
+const observer = new IntersectionObserver((entries)=>{
 
 
-// if(entry.isIntersecting){
-
-//     video.play();
-
-// }else{
-
-//     video.pause();
-//     video.currentTime = 0;
-
-// }
-
-// });
+entries.forEach(entry=>{
 
 
-// },{
-// threshold:0.8
-// });
+let video = entry.target;
 
 
-// videos.forEach(video=>{
+if(entry.isIntersecting){
 
-// observer.observe(video);
 
-// });
-const videos = document.querySelectorAll("video");
+videos.forEach(v=>{
 
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    const video = entry.target;
+if(v !== video){
 
-    if (entry.isIntersecting) {
-      video.play();     // el video visible se reproduce
-    } else {
-      video.pause();    // el video que sale de pantalla se pausa
-    }
-  });
-}, {
-  threshold: 0.6   // el video debe estar 60% visible para reproducirse
+v.pause();
+
+}
+
 });
 
-videos.forEach(video => observer.observe(video));
+
+video.play().catch(()=>{});
+
+
+}else{
+
+
+video.pause();
+
+
+}
+
+
+});
+
+
+},{
+
+threshold:0.75
+
+});
+
+
+
+videos.forEach(video=>{
+
+
+observer.observe(video);
+
+
+
+video.addEventListener("click",()=>{
+
+
+if(video.paused){
+
+videos.forEach(v=>v.pause());
+
+video.play();
+
+
+}else{
+
+video.pause();
+
+}
+
+
+});
+
+
+});
+
+
+</script>
