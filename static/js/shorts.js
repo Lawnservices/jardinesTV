@@ -1,15 +1,18 @@
- 
-
-const videos = document.querySelectorAll(".short-video");
+document.addEventListener("DOMContentLoaded",()=>{
 
 
-const observer = new IntersectionObserver((entries)=>{
+const videos=document.querySelectorAll(".short-video");
+
+
+
+const observer=new IntersectionObserver((entries)=>{
 
 
 entries.forEach(entry=>{
 
 
-let video = entry.target;
+const video=entry.target;
+
 
 
 if(entry.isIntersecting){
@@ -17,16 +20,20 @@ if(entry.isIntersecting){
 
 videos.forEach(v=>{
 
+
 if(v !== video){
 
 v.pause();
 
 }
 
+
 });
 
 
-video.play().catch(()=>{});
+
+video.play();
+
 
 
 }else{
@@ -43,7 +50,7 @@ video.pause();
 
 },{
 
-threshold:0.75
+threshold:0.80
 
 });
 
@@ -61,10 +68,7 @@ video.addEventListener("click",()=>{
 
 if(video.paused){
 
-videos.forEach(v=>v.pause());
-
 video.play();
-
 
 }else{
 
@@ -79,4 +83,4 @@ video.pause();
 });
 
 
- 
+});
