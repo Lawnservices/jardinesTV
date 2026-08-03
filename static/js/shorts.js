@@ -14,47 +14,29 @@ document.addEventListener("DOMContentLoaded", () => {
         videos.forEach(v => {
           if (v !== video) {
             v.pause();
+            v.muted = true;
           }
         });
 
-        // Autoplay estilo TikTok: empieza mudo
-        video.muted = false;
-        video.currentTime = video.currentTime;
+        // Autoplay permitido: empieza mudo
+        video.muted = true;
         video.play().catch(() => {});
+
+        // Activar sonido cuando el usuario hizo scroll
+        setTimeout(() => {
+          video.muted = false;
+        }, 150); // pequeño delay para evitar bloqueo del navegador
 
       } else {
         video.pause();
+        video.muted = true;
       }
     });
 
   }, { threshold: 0.75 });
 
-  // Activar observador y eventos
-  videos.forEach(video => {
-
-    observer.observe(video);
-
-    // Un solo toque para activar sonido
-    video.addEventListener("click", () => {
-
-      // Si está pausado, reproducir
-      if (video.paused) {
-        video.play();
-        return;
-      }
-
-      // Si está reproduciendo, alternar sonido
-      video.muted = !video.muted;
-    });
-
-    // Evitar que el video se reinicie al pausar
-    video.addEventListener("pause", () => {
-      if (!video.muted) {
-        video.muted = true;
-      }
-    });
-
-  });
+  // Activar observador
+  videos.forEach(video => observer.observe(video));
 
 });
 
