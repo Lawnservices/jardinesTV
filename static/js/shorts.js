@@ -1,72 +1,117 @@
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded",()=>{
 
-  const videos = document.querySelectorAll(".short-video");
 
-  const observer = new IntersectionObserver((entries) => {
+const videos=document.querySelectorAll(".short-video");
 
-    entries.forEach(entry => {
-      const video = entry.target;
 
-      if (entry.isIntersecting) {
 
-        // Pausar otros videos
-        videos.forEach(v => {
-          if (v !== video) {
+const observer=new IntersectionObserver((entries)=>{
+
+
+entries.forEach(entry=>{
+
+
+const video=entry.target;
+
+
+
+if(entry.isIntersecting){
+
+
+    // detener todos los demás
+
+    videos.forEach(v=>{
+
+        if(v!==video){
+
             v.pause();
-            v.muted = true;
-          }
-        });
 
-        // Autoplay permitido: empieza mudo
-        video.muted = true;
-        video.play().catch(() => {});
+            v.currentTime=0;
 
-        /*
-         🔥 TRUCO 1:
-         Primer intento de activar sonido (Android lo acepta)
-        */
-        setTimeout(() => {
-          if (!video.paused) {
-            video.muted = false;
-          }
-        }, 250);
+        }
 
-        /*
-         🔥 TRUCO 2:
-         Segundo intento (Safari a veces ignora el primero)
-        */
-        setTimeout(() => {
-          if (!video.paused) {
-            video.muted = false;
-          }
-        }, 700);
-
-        /*
-         🔥 TRUCO 3:
-         Forzar volumen (algunos Android lo permiten)
-        */
-        try {
-          video.volume = 1.0;
-        } catch (e) {}
-
-        /*
-         🔥 TRUCO 4:
-         Reproducción silenciosa para “desbloquear” audio en iPhone
-         (hack usado por apps grandes)
-        */
-        video.play().then(() => {
-          video.muted = false;
-        }).catch(() => {});
-
-      } else {
-        video.pause();
-        video.muted = true;
-      }
     });
 
-  }, { threshold: 0.70 });
 
-  videos.forEach(video => observer.observe(video));
+
+    // autoplay permitido en teléfono
+
+    video.muted=true;
+
+    video.play().catch(()=>{});
+
+
+
+}else{
+
+
+    video.pause();
+
+}
+
+
+
+});
+
+
+},{
+
+threshold:0.75
+
+});
+
+
+
+
+
+videos.forEach(video=>{
+
+
+observer.observe(video);
+
+
+
+/*
+ TOQUE EN PANTALLA:
+ activa sonido y pausa/play
+*/
+
+video.addEventListener("click",()=>{
+
+
+    if(video.muted){
+
+        video.muted=false;
+
+        video.volume=1;
+
+        video.play();
+
+
+    }else{
+
+
+        if(video.paused){
+
+            video.play();
+
+        }else{
+
+            video.pause();
+
+        }
+
+
+    }
+
+
+});
+
+
+
+});
+
+
 
 });
 
