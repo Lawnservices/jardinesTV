@@ -22,34 +22,41 @@ document.addEventListener("DOMContentLoaded", () => {
         video.play().catch(() => {});
 
         /*
-         🔥 TRUCO PROFESIONAL 1:
-         Intentar activar sonido después del autoplay.
-         Funciona en Android y en algunos iPhones.
+         🔥 TRUCO 1:
+         Primer intento de activar sonido (Android lo acepta)
         */
         setTimeout(() => {
           if (!video.paused) {
             video.muted = false;
           }
-        }, 300);
+        }, 250);
 
         /*
-         🔥 TRUCO PROFESIONAL 2:
-         Reintento silencioso para iPhone (Safari).
-         Safari a veces ignora el primer unmute.
+         🔥 TRUCO 2:
+         Segundo intento (Safari a veces ignora el primero)
         */
         setTimeout(() => {
           if (!video.paused) {
             video.muted = false;
           }
-        }, 800);
+        }, 700);
 
         /*
-         🔥 TRUCO PROFESIONAL 3:
-         Forzar volumen (algunos Android lo aceptan)
+         🔥 TRUCO 3:
+         Forzar volumen (algunos Android lo permiten)
         */
         try {
           video.volume = 1.0;
         } catch (e) {}
+
+        /*
+         🔥 TRUCO 4:
+         Reproducción silenciosa para “desbloquear” audio en iPhone
+         (hack usado por apps grandes)
+        */
+        video.play().then(() => {
+          video.muted = false;
+        }).catch(() => {});
 
       } else {
         video.pause();
