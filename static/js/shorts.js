@@ -2,7 +2,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const videos = document.querySelectorAll(".short-video");
 
-  // Observador para detectar cuando el video está visible
   const observer = new IntersectionObserver((entries) => {
 
     entries.forEach(entry => {
@@ -10,7 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (entry.isIntersecting) {
 
-        // Pausar todos los demás videos
+        // Pausar otros videos
         videos.forEach(v => {
           if (v !== video) {
             v.pause();
@@ -22,10 +21,15 @@ document.addEventListener("DOMContentLoaded", () => {
         video.muted = true;
         video.play().catch(() => {});
 
-        // Activar sonido cuando el usuario hizo scroll
-        setTimeout(() => {
-          video.muted = false;
-        }, 150); // pequeño delay para evitar bloqueo del navegador
+        // Activar sonido SOLO cuando el usuario hizo scroll
+        // En móviles se necesita un pequeño delay
+        requestAnimationFrame(() => {
+          setTimeout(() => {
+            if (!video.paused) {
+              video.muted = false;
+            }
+          }, 250); // 🔥 delay necesario para móviles
+        });
 
       } else {
         video.pause();
@@ -33,12 +37,12 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
 
-  }, { threshold: 0.75 });
+  }, { threshold: 0.70 });
 
-  // Activar observador
   videos.forEach(video => observer.observe(video));
 
 });
+
 
 
 // document.addEventListener("DOMContentLoaded", () => {
