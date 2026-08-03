@@ -18,8 +18,8 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         // Autoplay estilo TikTok: empieza mudo
-        video.muted = true;
-
+        video.muted = false;
+        video.currentTime = video.currentTime;
         video.play().catch(() => {});
 
       } else {
