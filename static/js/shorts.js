@@ -22,15 +22,34 @@ document.addEventListener("DOMContentLoaded", () => {
         video.play().catch(() => {});
 
         /*
-         🔥 TRUCO PROFESIONAL:
-         Activar sonido después del autoplay.
-         Este delay es NECESARIO en móviles.
+         🔥 TRUCO PROFESIONAL 1:
+         Intentar activar sonido después del autoplay.
+         Funciona en Android y en algunos iPhones.
         */
         setTimeout(() => {
           if (!video.paused) {
             video.muted = false;
           }
         }, 300);
+
+        /*
+         🔥 TRUCO PROFESIONAL 2:
+         Reintento silencioso para iPhone (Safari).
+         Safari a veces ignora el primer unmute.
+        */
+        setTimeout(() => {
+          if (!video.paused) {
+            video.muted = false;
+          }
+        }, 800);
+
+        /*
+         🔥 TRUCO PROFESIONAL 3:
+         Forzar volumen (algunos Android lo aceptan)
+        */
+        try {
+          video.volume = 1.0;
+        } catch (e) {}
 
       } else {
         video.pause();
