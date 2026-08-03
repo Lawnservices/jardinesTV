@@ -21,15 +21,16 @@ document.addEventListener("DOMContentLoaded", () => {
         video.muted = true;
         video.play().catch(() => {});
 
-        // Activar sonido SOLO cuando el usuario hizo scroll
-        // En móviles se necesita un pequeño delay
-        requestAnimationFrame(() => {
-          setTimeout(() => {
-            if (!video.paused) {
-              video.muted = false;
-            }
-          }, 250); // 🔥 delay necesario para móviles
-        });
+        /*
+         🔥 TRUCO PROFESIONAL:
+         Activar sonido después del autoplay.
+         Este delay es NECESARIO en móviles.
+        */
+        setTimeout(() => {
+          if (!video.paused) {
+            video.muted = false;
+          }
+        }, 300);
 
       } else {
         video.pause();
@@ -42,6 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
   videos.forEach(video => observer.observe(video));
 
 });
+
 
 
 
