@@ -270,8 +270,8 @@ footer {
 .video-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 25px;
-    max-width: 1600px;
+    gap: 24px;
+    max-width: 1800px;
     margin: auto;
 }
 
@@ -282,7 +282,7 @@ footer {
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 24px;
     max-width: 1400px;
-    margin: 30px auto;
+    margin:24px auto;
     padding: 0 20px;
 }
 
