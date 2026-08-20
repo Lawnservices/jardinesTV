@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <meta name="description" content="lawn mowing, lahnam md, miguel laguna, leaf removal, the best prices in thr area">
+     <meta name="author" content="Miguel Laguna">
+    <title>{% block title %}JardinTV - Videos de jardines {% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+    <header class="navbar">
+        <div class="logo">
+            🌿 <span>JardinTV</span>
+        </div>
+        <nav>
+            <a href="/">🏠 Inicio</a>
+            <a href="/upload">📤 Subir video</a>
+            <a href="/watch">🎥 Videos</a>
+        </nav>
+    </header>
+    <!-- <section class="upload-section">
+        <div class="upload-card">
+            <h1>📤 Subir un video</h1>
+            <p>
+                Comparte tu jardín, plantas o ideas con la comunidad 🌱
+            </p>
+            <form action="/upload" method="POST" enctype="multipart/form-data">
+                <label for="titulo">Título del video</label>
+                <input type="text" id="titulo" name="titulo" maxlength="200"
+                    placeholder="Ejemplo: Mi jardín en primavera" required>
+                <label for="descripcion">Descripción</label>
+                <textarea id="descripcion" name="descripcion" maxlength="1000"
+                    placeholder="Cuéntanos sobre tu jardín..."></textarea>
+
+                <label for="video">Selecciona tu video</label>
+                <input type="file" id="video" name="video" accept="video/mp4,video/webm,video/quicktime" required>
+                <button class="btn" type="submit">
+                    🚀 Publicar video
+                </button>
+            </form>
+        </div>
+    </section> -->
+    <footer>
+        <p>
+            © 2026 JardinTV 🌿
+        </p>
+    </footer>
+    <script type="module" src="/static/js/subir_video.js "></script>
+</body>
+
+</html>

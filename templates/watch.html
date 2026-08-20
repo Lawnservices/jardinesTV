@@ -1,15 +1,6 @@
-<!DOCTYPE html>
-<html lang="es">
+{% extends 'layout.html' %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Videos | JardinTV</title>
-    <link rel="stylesheet" href=" {{ url_for('static', filename='shorts.css') }}">
-
-</head>
-
-<body>
+{% block content %}
     <div class="video-feed">
         {% for video in videos %}
         <div class="video-container">
@@ -28,7 +19,10 @@
         </div>
         {% endfor %}
     </div>
-    <script src="/static/js/shorts.js"></script>
-</body>
 
-</html>
+
+
+<script src="{{ url_for('static', filename='js/shorts.js') }}"></script>
+{% endblock %}    
+    
+ 
