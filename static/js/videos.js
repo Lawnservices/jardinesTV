@@ -1,62 +1,31 @@
-const videos = document.querySelectorAll(".video-item video");
-const videoModal = document.getElementById("videoModal");
-const modalVideo = document.getElementById("modalVideo");
-const closeVideo = document.getElementById("closeVideo");
+document.addEventListener("DOMContentLoaded", () => {
 
-videos.forEach(video => {
+    const videos = document.querySelectorAll(".video-item");
 
-    video.addEventListener("click", function () {
+    videos.forEach(item => {
 
-        const source = video.querySelector("source");
+        const video = item.querySelector("video");
 
-        if (!source) {
-            return;
-        }
+        video.addEventListener("click", (event) => {
 
-        modalVideo.src = source.src;
+            event.stopPropagation();
 
-        videoModal.classList.add("active");
+            videos.forEach(otherItem => {
+                if (otherItem !== item) {
+                    otherItem.classList.remove("active");
 
-        modalVideo.play();
+                    const otherVideo = otherItem.querySelector("video");
+
+                    if (otherVideo) {
+                        otherVideo.pause();
+                    }
+                }
+            });
+
+            item.classList.toggle("active");
+
+        });
 
     });
-
-});
-
-closeVideo.addEventListener("click", function () {
-
-    modalVideo.pause();
-
-    modalVideo.src = "";
-
-    videoModal.classList.remove("active");
-
-});
-
-videoModal.addEventListener("click", function (event) {
-
-    if (event.target === videoModal) {
-
-        modalVideo.pause();
-
-        modalVideo.src = "";
-
-        videoModal.classList.remove("active");
-
-    }
-
-});
-
-document.addEventListener("keydown", function (event) {
-
-    if (event.key === "Escape") {
-
-        modalVideo.pause();
-
-        modalVideo.src = "";
-
-        videoModal.classList.remove("active");
-
-    }
 
 });
