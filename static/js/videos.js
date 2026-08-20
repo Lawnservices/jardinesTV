@@ -1,8 +1,8 @@
 document.addEventListener("DOMContentLoaded", () => {
 
-    const videos = document.querySelectorAll(".video-item");
+    const items = document.querySelectorAll(".video-item");
 
-    videos.forEach(item => {
+    items.forEach(item => {
 
         const video = item.querySelector("video");
 
@@ -10,19 +10,28 @@ document.addEventListener("DOMContentLoaded", () => {
 
             event.stopPropagation();
 
-            videos.forEach(otherItem => {
-                if (otherItem !== item) {
-                    otherItem.classList.remove("active");
+            const yaActivo = item.classList.contains("active");
 
-                    const otherVideo = otherItem.querySelector("video");
+            items.forEach(otherItem => {
+
+                otherItem.classList.remove("active");
+
+                if (otherItem !== item) {
+
+                    const otherVideo =
+                        otherItem.querySelector("video");
 
                     if (otherVideo) {
                         otherVideo.pause();
                     }
+
                 }
+
             });
 
-            item.classList.toggle("active");
+            if (!yaActivo) {
+                item.classList.add("active");
+            }
 
         });
 
