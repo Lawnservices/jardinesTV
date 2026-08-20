@@ -1,5 +1,5 @@
 /* ================================
-   VIDEOS RECIENTES - ESTILO YOUTUBE
+   VIDEOS - ESTILO YOUTUBE
 ================================ */
 
 .content {
@@ -17,147 +17,65 @@
 }
 
 /* ================================
-   REPRODUCTOR + RECOMENDACIONES
+   GRID DE VIDEOS
 ================================ */
 
-.youtube-layout {
+.videos-grid {
     display: grid;
-    grid-template-columns: minmax(0, 2fr) minmax(320px, 1fr);
-    gap: 25px;
-    align-items: start;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 30px 24px;
+    width: 100%;
 }
 
 /* ================================
-   VIDEO GRANDE
+   TARJETA
 ================================ */
 
-.main-video {
-    width: 100%;
-    background: #000;
-    border-radius: 12px;
+.video-item {
+    min-width: 0;
+    background: #fff;
+    border-radius: 14px;
     overflow: hidden;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.18);
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.10);
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
 }
 
-.main-video-player {
-    width: 100%;
-    background: #000;
-}
+/* ================================
+   VIDEO
+================================ */
 
-.main-video-player video,
-.main-video > video {
+.video-item video {
     display: block;
     width: 100%;
     aspect-ratio: 16 / 9;
     height: auto;
-    object-fit: contain;
-    background: #000;
-}
-
-/* INFORMACIÓN DEL VIDEO GRANDE */
-
-.main-video-info {
-    background: #fff;
-    padding: 20px 25px 25px;
-}
-
-.main-video-info h2 {
-    margin: 0 0 10px;
-    color: #176b2c;
-    font-size: 24px;
-    line-height: 1.4;
-}
-
-.main-video-info p {
-    margin: 0;
-    color: #555;
-    font-size: 16px;
-    line-height: 1.6;
-}
-
-/* ================================
-   VIDEOS DE LA DERECHA
-================================ */
-
-.youtube-recommendations {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    max-height: 750px;
-    overflow-y: auto;
-    padding-right: 5px;
-}
-
-/* BARRA DE SCROLL */
-
-.youtube-recommendations::-webkit-scrollbar {
-    width: 7px;
-}
-
-.youtube-recommendations::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 10px;
-}
-
-.youtube-recommendations::-webkit-scrollbar-thumb {
-    background: #bbb;
-    border-radius: 10px;
-}
-
-.youtube-recommendations::-webkit-scrollbar-thumb:hover {
-    background: #999;
-}
-
-/* ================================
-   TARJETAS DE RECOMENDACIÓN
-================================ */
-
-.youtube-recommendations .video-item {
-    display: grid;
-    grid-template-columns: 180px minmax(0, 1fr);
-    gap: 12px;
-    width: 100%;
-    min-width: 0;
-    background: #fff;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-    cursor: pointer;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.youtube-recommendations .video-item:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
-}
-
-/* VIDEO PEQUEÑO */
-
-.youtube-recommendations .video-item video {
-    display: block;
-    width: 180px;
-    height: 105px;
-    aspect-ratio: 16 / 9;
     object-fit: cover;
     background: #000;
+    cursor: pointer;
 }
 
-/* TITULO */
+/* ================================
+   TITULO
+================================ */
 
-.youtube-recommendations .video-item h3 {
-    margin: 10px 10px 5px 0;
-    color: #222;
-    font-size: 16px;
-    line-height: 1.35;
-}
-
-/* DESCRIPCIÓN */
-
-.youtube-recommendations .video-item p {
-    margin: 0 10px 10px 0;
-    color: #666;
-    font-size: 13px;
+.video-item h3 {
+    margin: 16px 18px 8px;
+    color: #176b2c;
+    font-size: 19px;
     line-height: 1.4;
+}
+
+/* ================================
+   DESCRIPCION
+================================ */
+
+.video-item p {
+    margin: 0 18px 15px;
+    color: #666;
+    font-size: 15px;
+    line-height: 1.5;
 
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -165,10 +83,66 @@
     overflow: hidden;
 }
 
-/* OCULTAR BOTONES DE LAS RECOMENDACIONES */
+/* ================================
+   BOTONES
+================================ */
 
-.youtube-recommendations .video-actions {
-    display: none;
+.video-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 15px 18px;
+}
+
+.video-actions button {
+    flex: 1;
+    border: none;
+    background: #f1f3f1;
+    color: #333;
+    padding: 10px 8px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: 0.2s;
+}
+
+.video-actions button:hover {
+    background: #176b2c;
+    color: #fff;
+}
+
+/* ================================
+   VIDEO SELECCIONADO
+================================ */
+
+.video-item.active {
+    grid-column: span 2;
+    grid-row: span 2;
+    transform: none;
+    z-index: 10;
+}
+
+.video-item.active video {
+    aspect-ratio: 16 / 9;
+    object-fit: contain;
+    background: #000;
+}
+
+.video-item.active h3 {
+    font-size: 24px;
+}
+
+.video-item.active p {
+    font-size: 16px;
+    -webkit-line-clamp: unset;
+}
+
+/* ================================
+   RESTO DE VIDEOS
+================================ */
+
+.video-item:not(.active) {
+    cursor: pointer;
 }
 
 /* ================================
@@ -181,36 +155,14 @@
         padding: 35px 25px;
     }
 
-    .youtube-layout {
-        grid-template-columns: 1fr;
-    }
-
-    .main-video {
-        width: 100%;
-    }
-
-    .youtube-recommendations {
-        display: grid;
+    .videos-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        max-height: none;
-        overflow: visible;
+        gap: 25px 20px;
     }
 
-    .youtube-recommendations .video-item {
-        display: block;
-    }
-
-    .youtube-recommendations .video-item video {
-        width: 100%;
-        height: auto;
-    }
-
-    .youtube-recommendations .video-item h3 {
-        margin: 12px;
-    }
-
-    .youtube-recommendations .video-item p {
-        margin: 0 12px 12px;
+    .video-item.active {
+        grid-column: span 2;
+        grid-row: auto;
     }
 }
 
@@ -229,51 +181,35 @@
         margin-bottom: 22px;
     }
 
-    .youtube-layout {
-        display: block;
+    .videos-grid {
+        grid-template-columns: 1fr;
+        gap: 25px;
     }
 
-    .main-video {
-        border-radius: 8px;
+    .video-item {
+        border-radius: 12px;
     }
 
-    .main-video-info {
-        padding: 15px 18px 20px;
+    .video-item.active {
+        grid-column: span 1;
+        grid-row: auto;
     }
 
-    .main-video-info h2 {
+    .video-item.active h3 {
         font-size: 20px;
     }
 
-    .main-video-info p {
-        font-size: 14px;
+    .video-item h3 {
+        font-size: 18px;
     }
 
-    .youtube-recommendations {
-        display: flex;
-        flex-direction: column;
-        gap: 15px;
-        margin-top: 25px;
+    .video-actions {
+        gap: 6px;
     }
 
-    .youtube-recommendations .video-item {
-        display: grid;
-        grid-template-columns: 150px minmax(0, 1fr);
-    }
-
-    .youtube-recommendations .video-item video {
-        width: 150px;
-        height: 85px;
-    }
-
-    .youtube-recommendations .video-item h3 {
-        margin: 8px 8px 4px 0;
-        font-size: 15px;
-    }
-
-    .youtube-recommendations .video-item p {
-        margin: 0 8px 8px 0;
-        font-size: 12px;
+    .video-actions button {
+        font-size: 13px;
+        padding: 9px 5px;
     }
 }
 
@@ -283,17 +219,8 @@
 
 @media (max-width: 400px) {
 
-    .youtube-recommendations .video-item {
-        grid-template-columns: 125px minmax(0, 1fr);
-    }
-
-    .youtube-recommendations .video-item video {
-        width: 125px;
-        height: 70px;
-    }
-
-    .youtube-recommendations .video-item h3 {
-        font-size: 14px;
+    .video-actions button {
+        font-size: 12px;
     }
 
 }
