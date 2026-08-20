@@ -4,7 +4,8 @@ margin: 24px auto;
 
 }
 .video-feed {
-    width: 100%;
+    max-width:1200px;
+    margin: 24px auto;
     min-height: calc(100vh - 80px);
     display: flex;
     flex-direction: column;
