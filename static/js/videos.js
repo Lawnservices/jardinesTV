@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
 
     const items = document.querySelectorAll(".video-item");
-
+    
     items.forEach(item => {
 
         const video = item.querySelector("video");
@@ -36,5 +36,22 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
     });
+
+    items.forEach(item => {
+
+    const video = item.querySelector("video");
+
+    video.addEventListener("click", () => {
+
+        item.classList.add("active");
+
+        document.querySelector(".content").scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+
+    });
+
+});
 
 });
