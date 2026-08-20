@@ -282,7 +282,7 @@ footer {
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 24px;
     max-width: 1400px;
-    margin:px auto;
+    margin: 30px auto;
     padding: 0 20px;
 }
 
