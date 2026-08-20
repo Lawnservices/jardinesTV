@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Videos | JardinTV</title>
   <link rel="stylesheet" href="{{ 'static', filename='shorts.css' }}">
 </head>
+
 <body>
   <div class="video-feed">
     {% for video in videos %}
@@ -13,7 +15,7 @@
       <video class="short-video" poster="{{ video.thumbnail }}" playsinline webkit-playsinline controls
         preload="metadata" loop>
         <source src="{{ video.url_video }}" type="video/mp4">
-            </video>
+      </video>
       <div class="video-info">
         <h3>🌱 {{ video.titulo }}</h3>
         <p>{{ video.descripcion }}</p>
@@ -21,10 +23,11 @@
     </div>
     {% else %}
     <div class="video-empty">
-            <h2>No hay videos todavía</h2>
+      <h2>No hay videos todavía</h2>
     </div>
     {% endfor %}
   </div>
   <script src="/static/js/shorts.js"></script>
 </body>
+
 </html>

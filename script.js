@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // Autoplay permitido: empieza mudo
         video.muted = true;
-        video.play().catch(() => {});
+        video.play().catch(() => { });
 
         // Activar sonido SOLO cuando el usuario hizo scroll
         // En móviles se necesita un pequeño delay
