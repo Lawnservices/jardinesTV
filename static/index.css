@@ -32,7 +32,8 @@
 ================================ */
 
 .video-item {
-    min-width: 0;
+
+    min-width:auto;
     background: #fff;
     border-radius: 14px;
     overflow: hidden;
