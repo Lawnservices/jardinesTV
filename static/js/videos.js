@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
 
     const items = document.querySelectorAll(".video-item");
-    
+
     items.forEach(item => {
 
         const video = item.querySelector("video");
@@ -12,11 +12,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const yaActivo = item.classList.contains("active");
 
+            /* ================================
+               QUITAR ACTIVE DE LOS DEMÁS
+            ================================= */
+
             items.forEach(otherItem => {
 
-                otherItem.classList.remove("active");
-
                 if (otherItem !== item) {
+
+                    otherItem.classList.remove("active");
 
                     const otherVideo =
                         otherItem.querySelector("video");
@@ -29,29 +33,34 @@ document.addEventListener("DOMContentLoaded", () => {
 
             });
 
+            /* ================================
+               ACTIVAR VIDEO
+            ================================= */
+
             if (!yaActivo) {
+
                 item.classList.add("active");
+
+                /* ================================
+                   SCROLL HACIA ARRIBA
+                ================================= */
+
+                document.querySelector(".content").scrollIntoView({
+                    behavior: "smooth",
+                    block: "start"
+                });
+
+            } else {
+
+                /* Si vuelve a hacer click,
+                   quitar active */
+
+                item.classList.remove("active");
+
             }
 
         });
 
     });
-
-    items.forEach(item => {
-
-    const video = item.querySelector("video");
-
-    video.addEventListener("click", () => {
-
-        item.classList.add("active");
-
-        document.querySelector(".content").scrollIntoView({
-            behavior: "smooth",
-            block: "start"
-        });
-
-    });
-
-});
 
 });
