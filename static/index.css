@@ -124,7 +124,7 @@
 /* VIDEO GRANDE */
 
 .video-item.active video {
-    margin-top:10px;
+    margin-top:0px;
     width: 100%;
     aspect-ratio: 16 / 9;
     object-fit: contain;
