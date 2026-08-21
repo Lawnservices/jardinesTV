@@ -264,6 +264,7 @@ def watch():
     return render_template("watch.html", videos=videos)
 
 
+
 # prueva
 @app.route("/shorts")
 def shorts():
@@ -280,7 +281,7 @@ def shorts():
 
         print("ERROR WATCH:", e)
 
-    return render_template("watch.html", videos=videos)
+    return render_template("shorts.html", videos=videos)
 
 
 if __name__ == "__main__":
