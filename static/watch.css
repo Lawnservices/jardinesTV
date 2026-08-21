@@ -3,7 +3,6 @@
     display: flex;
     justify-content: center;
     width: 100%;
-    height: 100vh; /* ocupa toda la altura de la pantalla */
     overflow-y: auto; /* scroll vertical como shorts */
     background: #000; /* fondo oscuro tipo YouTube */
 }
@@ -27,8 +26,8 @@
     max-width: 90vw;
 }
 
-/* El video estilo short */
-.short-video {
+/* El video estilo short — AHORA FUNCIONA CON TU HTML */
+.short-videos {
     width: 100%;
     height: 85vh; /* casi toda la altura de la pantalla */
     object-fit: cover; /* recorta como YouTube Shorts */
@@ -105,7 +104,7 @@ body {
         overflow: hidden;
     }
 
-    .short-video {
+    .short-videos {
         width: 100%;
         height: 100%;
         object-fit: cover;
@@ -158,7 +157,7 @@ body {
         box-shadow: 0 5px 20px rgba(0, 0, 0, 0.25);
     }
 
-    .short-video {
+    .short-videos {
         width: 100%;
         height: 100%;
         object-fit: cover;

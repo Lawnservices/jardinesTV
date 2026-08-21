@@ -6,7 +6,7 @@
     <div class="video-feed">
         {% for video in videos %}
         <div class="video-container">
-            <video class="short-video" poster="{{ video.thumbnail }}" playsinline webkit-playsinline muted controls
+            <video class="short-videos" poster="{{ video.thumbnail }}" playsinline webkit-playsinline muted controls
                 preload="metadata">
                 <source src="{{ video.url_video }}" type="video/mp4">
             </video>
