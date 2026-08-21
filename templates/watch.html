@@ -1,5 +1,17 @@
  
 <link rel="stylesheet" href="{{ url_for('static', filename='one.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='navbar.css') }}">
+ <header class="navbar">
+        <div class="logo">
+            <span>JardinesTV</span>
+        </div>
+        <nav>
+            <a href="/">🏠 Inicio</a>
+            <a href="/upload">📤 Subir video</a>
+            <a href="/watch">🎥 Videos</a>
+            <a href="/shorts">Shorts</a>
+        </nav>
+    </header>
 {% block content %}
 
      
