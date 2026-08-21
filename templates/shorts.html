@@ -4,10 +4,22 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <link rel="stylesheet" href="{{ url_for('static', filename='shorts.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='navbar.css') }}">
 <title>VideosTV-Shorts</title>
 </head>
 
 <body>
+ <header class="navbar">
+        <div class="logo">
+            <span>JardinesTV</span>
+        </div>
+        <nav>
+            <a href="/">🏠 Inicio</a>
+            <a href="/upload">📤 Subir video</a>
+            <a href="/watch">🎥 Videos</a>
+            <a href="/shorts">Shorts</a>
+        </nav>
+    </header>
 
 <div id="loading" class="loading">
     Cargando videos...
