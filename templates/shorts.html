@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<link rel="stylesheet" href="shorts.css">
+<link rel="stylesheet" href="{{ url_for('static', filename='shorts.css') }}">
 <title>VideosTV-Shorts</title>
 </head>
 
@@ -16,6 +16,6 @@
 <main id="video-feed"></main>
 
  
-<script src="shorts.js"></script>
+<script src="{{ url_for('static', filename='js/shorts.js')}}"></script>
 </body>
 </html>
