@@ -286,6 +286,11 @@ def shorts():
 # pagina de error
 @app.errorhandler(404)
 def pagina_no_encontrada(error):
+    return redirect("/")
+
+
+@app.errorhandler(404)
+def pagina_no_encontrada(error):
     return redirect("/shorts")
 
 
