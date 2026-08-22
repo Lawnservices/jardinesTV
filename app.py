@@ -283,6 +283,12 @@ def shorts():
 
     return render_template("shorts.html", videos=videos)
 
+# pagina de error
+@app.errorhandler(404)
+def pagina_no_encontrada(error):
+    return redirect("/shorts")
+
+
 
 if __name__ == "__main__":
 
