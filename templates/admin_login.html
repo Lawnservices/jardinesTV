@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Jardines TV - Admin</title>
+
+    <style>
+
+        body {
+            margin: 0;
+            background: #061125;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+
+        main {
+            width: 90%;
+            max-width: 450px;
+            margin: 100px auto;
+        }
+
+        .login-box {
+            background: #020817;
+            padding: 30px;
+            border-radius: 12px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px;
+            margin-top: 10px;
+            box-sizing: border-box;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            margin-top: 20px;
+            border: none;
+            border-radius: 6px;
+            background: #e60000;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .error {
+            color: #ff5555;
+            text-align: center;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<main>
+
+    <div class="login-box">
+
+        <h1>Jardines TV Admin</h1>
+
+        {% if error %}
+
+            <p class="error">
+                {{ error }}
+            </p>
+
+        {% endif %}
+
+        <form method="POST">
+
+            <input
+                type="password"
+                name="password"
+                placeholder="Admin password"
+                required
+            >
+
+            <button type="submit">
+                LOGIN
+            </button>
+
+        </form>
+
+    </div>
+
+</main>
+
+</body>
+
+</html>

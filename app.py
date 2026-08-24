@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, flash
+from flask import Flask, render_template, request, redirect, flash, session
 import uuid
 import requests
 import os
@@ -10,8 +10,12 @@ from firebase_admin import credentials, storage
 
 app = Flask(__name__)
 app.secret_key = "jardintv-secreto"
+# contraseña para videos en vivo
+app.secret_key = "23a0fd33d28fd41ad5cd3be2190eabeafcbbb7becd7e13b13e8b7e7d9e2cda88"
 
+live_url = ""
 
+ADMIN_PASSWORD = "Lagunastv"
 # =========================
 # CONFIGURAR FIREBASE
 # =========================
@@ -292,6 +296,65 @@ def pagina_no_encontrada(error):
 @app.errorhandler(404)
 def pagina_no_encontrada(error):
     return redirect("/shorts")
+
+
+
+# pagina de video en vivo
+
+
+@app.route("/live")
+def live():
+    return render_template("live.html", live_url=live_url)
+
+
+@app.route("/admin/login", methods=["GET", "POST"])
+def admin_login():
+
+    if request.method == "POST":
+
+        password = request.form.get("password", "")
+
+        if password == ADMIN_PASSWORD:
+
+            session["admin"] = True
+
+            return redirect("/admin/live")
+
+        return render_template(
+            "admin_login.html",
+            error="Contraseña incorrecta"
+        )
+
+    return render_template("admin_login.html")
+
+
+@app.route("/admin/live", methods=["GET", "POST"])
+def admin_live():
+
+    global live_url
+
+    if not session.get("admin"):
+        return redirect("/admin/login")
+
+    if request.method == "POST":
+
+        live_url = request.form.get("live_url", "").strip()
+
+        return redirect("/live")
+
+    return render_template(
+        "admin_live.html",
+        live_url=live_url
+    )
+
+
+@app.route("/admin/logout")
+def admin_logout():
+
+    session.pop("admin", None)
+
+    return redirect("/admin/login")
+
 
 
 

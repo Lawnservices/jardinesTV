@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Jardines TV - Admin Live</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: #061125;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+
+        main {
+            width: 90%;
+            max-width: 700px;
+            margin: 60px auto;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .admin-box {
+            background: #020817;
+            padding: 30px;
+            border-radius: 12px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 6px;
+            background: #e60000;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #ff2222;
+        }
+
+        .clear {
+            background: #555;
+            margin-left: 10px;
+        }
+
+        .clear:hover {
+            background: #777;
+        }
+
+        .examples {
+            margin-top: 25px;
+            line-height: 1.8;
+            color: #bbb;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<main>
+
+    <h1>Jardines TV - Live</h1>
+
+    <div class="admin-box">
+
+        <form method="POST">
+
+            <label for="live_url">
+                Live Video URL
+            </label>
+
+            <input
+                type="text"
+                id="live_url"
+                name="live_url"
+                value="{{ live_url }}"
+                placeholder="Paste your video or live URL here"
+            >
+
+            <button type="submit">
+                GUARDAR LIVE
+            </button>
+
+        </form>
+
+        <div class="examples">
+
+            <strong>Ejemplos:</strong>
+
+            <br>
+
+            YouTube:
+            <br>
+            https://www.youtube.com/embed/VIDEO_ID
+
+            <br><br>
+
+            MP4:
+            <br>
+            https://example.com/video.mp4
+
+            <br><br>
+
+            HLS:
+            <br>
+            https://example.com/live/stream.m3u8
+
+        </div>
+
+    </div>
+
+</main>
+
+</body>
+
+</html>

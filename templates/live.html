@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Jardines TV - Live</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: #061125;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+
+        main {
+            width: 96%;
+            max-width: 1400px;
+            margin: 40px auto;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .player {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            background: #000;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .player iframe,
+        .player video,
+        .player img {
+            width: 100%;
+            height: 100%;
+            display: block;
+            border: 0;
+            object-fit: cover;
+        }
+
+        .player video {
+            background: #000;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<main>
+
+    <h1>Jardines TV - En Vivo</h1>
+
+    {% if live_url %}
+
+        <div class="player">
+
+            {% if "youtube.com" in live_url
+               or "youtu.be" in live_url %}
+
+                <!-- YOUTUBE -->
+
+                <iframe
+                    src="{{ live_url }}"
+                    title="Jardines TV Live"
+                    allow="autoplay; encrypted-media; picture-in-picture"
+                    allowfullscreen>
+                </iframe>
+
+
+            {% elif ".m3u8" in live_url %}
+
+                <!-- HLS / M3U8 -->
+
+                <video
+                    id="liveVideo"
+                    controls
+                    autoplay
+                    playsinline>
+                </video>
+
+
+            {% elif ".mp4" in live_url
+               or ".webm" in live_url
+               or ".ogg" in live_url %}
+
+                <!-- VIDEO DIRECTO -->
+
+                <video
+                    src="{{ live_url }}"
+                    controls
+                    autoplay
+                    playsinline>
+                </video>
+
+
+            {% else %}
+
+                <!-- OTRA URL -->
+
+                <iframe
+                    src="{{ live_url }}"
+                    title="Jardines TV Live"
+                    allow="autoplay; encrypted-media; picture-in-picture"
+                    allowfullscreen>
+                </iframe>
+
+            {% endif %}
+
+        </div>
+
+    {% else %}
+
+        <!-- NO LIVE -->
+
+        <div class="player">
+
+            <img
+                src="{{ url_for('static', filename='images/jardinestv.png') }}"
+                alt="Jardines TV - Not Live">
+
+        </div>
+
+    {% endif %}
+
+</main>
+
+
+{% if live_url and ".m3u8" in live_url %}
+
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+
+<script>
+
+    const video = document.getElementById("liveVideo");
+
+    const stream = "{{ live_url }}";
+
+    if (Hls.isSupported()) {
+
+        const hls = new Hls();
+
+        hls.loadSource(stream);
+        hls.attachMedia(video);
+
+    } else if (
+        video.canPlayType(
+            "application/vnd.apple.mpegurl"
+        )
+    ) {
+
+        video.src = stream;
+
+    }
+
+</script>
+
+{% endif %}
+
+</body>
+
+</html>
