@@ -11,11 +11,11 @@ from firebase_admin import credentials, storage
 app = Flask(__name__)
 app.secret_key = "jardintv-secreto"
 # contraseña para videos en vivo
-app.secret_key = "23a0fd33d28fd41ad5cd3be2190eabeafcbbb7becd7e13b13e8b7e7d9e2cda88"
+app.secret_key = os.environ.get("SECRET_KEY")
 
 live_url = ""
 
-ADMIN_PASSWORD = "Lagunastv"
+ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD") 
 # =========================
 # CONFIGURAR FIREBASE
 # =========================
