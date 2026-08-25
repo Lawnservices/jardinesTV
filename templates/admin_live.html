@@ -88,13 +88,22 @@
         }
 
     </style>
-
+<link rel="stylesheet" href="{{ url_for('static', filename='navbar.css')}}">
 </head>
 
 <body>
 
 <main>
-       
+       <header class="navbar">
+        <div class="logo">
+        <span>JardinesTV</span>
+        </div>
+        <nav>
+             
+            <a href="/upload">📤 Subir video</a>
+           
+        </nav>
+    </header>
 
     <h1>Jardines TV - Live</h1>
 
