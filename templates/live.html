@@ -9,7 +9,7 @@
         name="viewport"
         content="width=device-width, initial-scale=1.0"
     >
-
+    <link rel="stylesheet" href="{{ url_for('static', filename='navbar.css'}}">
     <title>Jardines TV - Live</title>
 
     <style>
@@ -65,6 +65,17 @@
 <body>
 
 <main>
+    <header class="navbar">
+        <div class="logo">
+            <span>JardinesTV</span>
+        </div>
+        <nav>
+            <a href="/">🏠 Inicio</a>
+            <a href="/upload">📤 Subir video</a>
+            <a href="/watch">🎥 Shorts</a>
+            <a href="/shorts">Videos</a>
+        </nav>
+    </header>
 
     <h1>Jardines TV - En Vivo</h1>
 
