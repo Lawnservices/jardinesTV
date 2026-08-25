@@ -1,72 +1,91 @@
-from flask import Flask, json, render_template, request, redirect, flash, session
-import uuid
-import requests
 import os
+import json
+import uuid
 import tempfile
 import subprocess
-import json 
+
+import requests
+
+from flask import (
+    Flask,
+    render_template,
+    request,
+    redirect,
+    flash,
+    session
+)
 
 import firebase_admin
 from firebase_admin import credentials, storage
 
-app = Flask(__name__)
- 
 
-# contraseña para videos en vivo
+# ==================================================
+# FLASK
+# ==================================================
+
+app = Flask(__name__)
+
 app.secret_key = os.environ.get("SECRET_KEY")
+
+ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD")
 
 live_url = ""
 
-ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD") 
-# =========================
-# CONFIGURAR FIREBASE
-# =========================
 
-firebase_json = os.getenv("FIREBASE_KEY")
-if firebase_json:
-    firebase_data = json.loads(firebase_json)
+# ==================================================
+# FIREBASE
+# ==================================================
 
-    cred = credentials.Certificate(firebase_data)
+firebase_json = os.environ.get("FIREBASE_KEY")
 
-    firebase_admin.initialize_app(cred)
+if not firebase_json:
+    raise RuntimeError(
+        "FIREBASE_KEY no está configurada."
+    )
 
+firebase_data = json.loads(firebase_json)
 
-with tempfile.NamedTemporaryFile(delete=False, mode="w", suffix=".json") as temp_file:
-    temp_file.write(firebase_json)
-    temp_path = temp_file.name
-
-
-cred = credentials.Certificate(temp_path)
-
+cred = credentials.Certificate(firebase_data)
 
 firebase_admin.initialize_app(
-    cred, {"storageBucket": "jardines-4e1db.firebasestorage.app"}
+    cred,
+    {
+        "storageBucket": "jardines-4e1db.firebasestorage.app"
+    }
 )
 
 
-# =========================
+# ==================================================
 # API
-# =========================
+# ==================================================
 
 API_URL = "https://www.creantunegocio.com/api/videos"
 
 
-# =========================
-# FORMATOS
-# =========================
+# ==================================================
+# FORMATOS PERMITIDOS
+# ==================================================
 
-ALLOWED_EXTENSIONS = {"mp4", "mov", "webm", "m4v"}
+ALLOWED_EXTENSIONS = {
+    "mp4",
+    "mov",
+    "webm",
+    "m4v"
+}
 
 
 def allowed_file(filename):
 
-    return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
+    return (
+        "." in filename
+        and filename.rsplit(".", 1)[1].lower()
+        in ALLOWED_EXTENSIONS
+    )
 
 
-# =========================
-# CREAR MINIATURA
-# =========================
-
+# ==================================================
+# MINIATURA
+# ==================================================
 
 def crear_thumbnail(video_path, image_path):
 
@@ -81,24 +100,41 @@ def crear_thumbnail(video_path, image_path):
             "-vframes",
             "1",
             image_path,
-            "-y",
+            "-y"
         ]
 
-        subprocess.run(comando, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        resultado = subprocess.run(
+            comando,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE
+        )
+
+        if resultado.returncode != 0:
+
+            print(
+                "ERROR FFMPEG:",
+                resultado.stderr.decode(
+                    errors="ignore"
+                )
+            )
+
+            return False
 
         return os.path.exists(image_path)
 
     except Exception as e:
 
-        print("ERROR THUMBNAIL:", e)
+        print(
+            "ERROR THUMBNAIL:",
+            e
+        )
 
         return False
 
 
-# =========================
-# PAGINA PRINCIPAL
-# =========================
-
+# ==================================================
+# PÁGINA PRINCIPAL
+# ==================================================
 
 @app.route("/")
 def inicio():
@@ -107,112 +143,210 @@ def inicio():
 
     try:
 
-        respuesta = requests.get(API_URL, timeout=15)
+        respuesta = requests.get(
+            API_URL,
+            timeout=15
+        )
+
+        respuesta.raise_for_status()
 
         videos = respuesta.json()
 
     except Exception as e:
 
-        print("ERROR API:", e)
+        print(
+            "ERROR API:",
+            e
+        )
 
-    return render_template("index.html", videos=videos)
+    return render_template(
+        "index.html",
+        videos=videos
+    )
 
 
-# =========================
+# ==================================================
 # SUBIR VIDEO
-# =========================
+# ==================================================
 
-
-@app.route("/upload", methods=["GET", "POST"])
+@app.route(
+    "/upload",
+    methods=["GET", "POST"]
+)
 def upload():
 
     if request.method == "POST":
 
-        titulo = request.form.get("titulo")
-        descripcion = request.form.get("descripcion")
-        video = request.files.get("video")
+        titulo = request.form.get(
+            "titulo",
+            ""
+        ).strip()
+
+        descripcion = request.form.get(
+            "descripcion",
+            ""
+        ).strip()
+
+        video = request.files.get(
+            "video"
+        )
 
         if not titulo or not video:
 
-            flash("Faltan datos")
+            flash(
+                "Faltan datos"
+            )
 
-            return redirect("/upload")
+            return redirect(
+                "/upload"
+            )
 
         if video.filename == "":
 
-            flash("Archivo vacío")
+            flash(
+                "Archivo vacío"
+            )
 
-            return redirect("/upload")
+            return redirect(
+                "/upload"
+            )
 
-        if not allowed_file(video.filename):
+        if not allowed_file(
+            video.filename
+        ):
 
-            flash("Formato no permitido")
+            flash(
+                "Formato no permitido"
+            )
 
-            return redirect("/upload")
+            return redirect(
+                "/upload"
+            )
 
-        # =========================
-        # GUARDAR TEMPORAL VIDEO
-        # =========================
+        # ==========================================
+        # ARCHIVOS TEMPORALES
+        # ==========================================
 
-        extension = os.path.splitext(video.filename)[1]
+        extension = os.path.splitext(
+            video.filename
+        )[1].lower()
 
         nombre = uuid.uuid4().hex
 
-        video_temp = f"/tmp/{nombre}{extension}"
+        temp_dir = tempfile.gettempdir()
 
-        video.save(video_temp)
+        video_temp = os.path.join(
+            temp_dir,
+            nombre + extension
+        )
 
-        # =========================
-        # CREAR THUMBNAIL
-        # =========================
-
-        thumbnail_temp = f"/tmp/{nombre}.jpg"
-
-        creado = crear_thumbnail(video_temp, thumbnail_temp)
-
-        if not creado:
-
-            flash("No se pudo crear miniatura")
-
-            return redirect("/upload")
-
-        bucket = storage.bucket()
-
-        # =========================
-        # SUBIR VIDEO FIREBASE
-        # =========================
-
-        video_blob = bucket.blob("videos/" + nombre + extension)
-
-        video_blob.upload_from_filename(video_temp, content_type="video/mp4")
-
-        video_blob.make_public()
-
-        url_video = video_blob.public_url
-
-        # =========================
-        # SUBIR THUMBNAIL FIREBASE
-        # =========================
-
-        img_blob = bucket.blob("thumbnails/" + nombre + ".jpg")
-
-        img_blob.upload_from_filename(thumbnail_temp, content_type="image/jpeg")
-
-        img_blob.make_public()
-
-        thumbnail = img_blob.public_url
-
-        print("VIDEO:")
-        print(url_video)
-
-        print("THUMBNAIL:")
-        print(thumbnail)
-
-        # =========================
-        # GUARDAR MYSQL POR API
-        # =========================
+        thumbnail_temp = os.path.join(
+            temp_dir,
+            nombre + ".jpg"
+        )
 
         try:
+
+            # ======================================
+            # GUARDAR VIDEO TEMPORAL
+            # ======================================
+
+            video.save(
+                video_temp
+            )
+
+            # ======================================
+            # CREAR MINIATURA
+            # ======================================
+
+            creado = crear_thumbnail(
+                video_temp,
+                thumbnail_temp
+            )
+
+            if not creado:
+
+                flash(
+                    "No se pudo crear la miniatura"
+                )
+
+                return redirect(
+                    "/upload"
+                )
+
+            # ======================================
+            # FIREBASE
+            # ======================================
+
+            bucket = storage.bucket()
+
+            # ======================================
+            # SUBIR VIDEO
+            # ======================================
+
+            video_blob = bucket.blob(
+                "videos/"
+                + nombre
+                + extension
+            )
+
+            content_types = {
+                ".mp4": "video/mp4",
+                ".mov": "video/quicktime",
+                ".webm": "video/webm",
+                ".m4v": "video/x-m4v"
+            }
+
+            content_type = content_types.get(
+                extension,
+                "application/octet-stream"
+            )
+
+            video_blob.upload_from_filename(
+                video_temp,
+                content_type=content_type
+            )
+
+            video_blob.make_public()
+
+            url_video = (
+                video_blob.public_url
+            )
+
+            # ======================================
+            # SUBIR MINIATURA
+            # ======================================
+
+            img_blob = bucket.blob(
+                "thumbnails/"
+                + nombre
+                + ".jpg"
+            )
+
+            img_blob.upload_from_filename(
+                thumbnail_temp,
+                content_type="image/jpeg"
+            )
+
+            img_blob.make_public()
+
+            thumbnail = (
+                img_blob.public_url
+            )
+
+            print(
+                "VIDEO:",
+                url_video
+            )
+
+            print(
+                "THUMBNAIL:",
+                thumbnail
+            )
+
+            # ======================================
+            # GUARDAR EN API / MYSQL
+            # ======================================
 
             respuesta = requests.post(
                 API_URL,
@@ -220,43 +354,82 @@ def upload():
                     "titulo": titulo,
                     "descripcion": descripcion,
                     "url_video": url_video,
-                    "thumbnail": thumbnail,
+                    "thumbnail": thumbnail
                 },
-                timeout=15,
+                timeout=15
             )
 
-            print("API POST:", respuesta.text)
+            print(
+                "API POST:",
+                respuesta.text
+            )
 
-            if respuesta.status_code != 200:
+            if respuesta.status_code not in (
+                200,
+                201
+            ):
 
-                flash("Error guardando datos")
+                flash(
+                    "Error guardando los datos"
+                )
 
-                return redirect("/upload")
+                return redirect(
+                    "/upload"
+                )
+
+            flash(
+                "Video publicado correctamente"
+            )
+
+            return redirect(
+                "/watch"
+            )
 
         except Exception as e:
 
-            print("ERROR API POST:", e)
+            print(
+                "ERROR SUBIENDO VIDEO:",
+                e
+            )
 
-            flash("Error conectando API")
+            flash(
+                "Ocurrió un error al subir el video"
+            )
 
-            return redirect("/upload")
+            return redirect(
+                "/upload"
+            )
 
-        # borrar temporales
+        finally:
 
-        os.remove(video_temp)
-        os.remove(thumbnail_temp)
+            # ======================================
+            # BORRAR TEMPORALES
+            # ======================================
 
-        flash("Video publicado correctamente")
+            if os.path.exists(
+                video_temp
+            ):
 
-        return redirect("/watch")
+                os.remove(
+                    video_temp
+                )
 
-    return render_template("upload.html")
+            if os.path.exists(
+                thumbnail_temp
+            ):
+
+                os.remove(
+                    thumbnail_temp
+                )
+
+    return render_template(
+        "upload.html"
+    )
 
 
-# =========================
+# ==================================================
 # WATCH
-# =========================
-
+# ==================================================
 
 @app.route("/watch")
 def watch():
@@ -265,19 +438,32 @@ def watch():
 
     try:
 
-        respuesta = requests.get(API_URL, timeout=15)
+        respuesta = requests.get(
+            API_URL,
+            timeout=15
+        )
+
+        respuesta.raise_for_status()
 
         videos = respuesta.json()
 
     except Exception as e:
 
-        print("ERROR WATCH:", e)
+        print(
+            "ERROR WATCH:",
+            e
+        )
 
-    return render_template("watch.html", videos=videos)
+    return render_template(
+        "watch.html",
+        videos=videos
+    )
 
 
+# ==================================================
+# SHORTS
+# ==================================================
 
-# prueva
 @app.route("/shorts")
 def shorts():
 
@@ -285,70 +471,114 @@ def shorts():
 
     try:
 
-        respuesta = requests.get(API_URL, timeout=15)
+        respuesta = requests.get(
+            API_URL,
+            timeout=15
+        )
+
+        respuesta.raise_for_status()
 
         videos = respuesta.json()
 
     except Exception as e:
 
-        print("ERROR WATCH:", e)
+        print(
+            "ERROR SHORTS:",
+            e
+        )
 
-    return render_template("shorts.html", videos=videos)
+    return render_template(
+        "shorts.html",
+        videos=videos
+    )
 
-# pagina de error
+
+# ==================================================
+# ERROR 404
+# ==================================================
+
 @app.errorhandler(404)
 def pagina_no_encontrada(error):
+
     return redirect("/")
 
 
-@app.errorhandler(404)
-def pagina_no_encontrada(error):
-    return redirect("/shorts")
-
-
-
-# pagina de video en vivo
-
+# ==================================================
+# LIVE
+# ==================================================
 
 @app.route("/live")
 def live():
-    return render_template("live.html", live_url=live_url)
+
+    return render_template(
+        "live.html",
+        live_url=live_url
+    )
 
 
-@app.route("/admin/login", methods=["GET", "POST"])
+# ==================================================
+# ADMIN LOGIN
+# ==================================================
+
+@app.route(
+    "/admin/login",
+    methods=["GET", "POST"]
+)
 def admin_login():
 
     if request.method == "POST":
 
-        password = request.form.get("password", "")
+        password = request.form.get(
+            "password",
+            ""
+        )
 
         if password == ADMIN_PASSWORD:
 
             session["admin"] = True
 
-            return redirect("/admin/live")
+            return redirect(
+                "/admin/live"
+            )
 
         return render_template(
             "admin_login.html",
             error="Contraseña incorrecta"
         )
 
-    return render_template("admin_login.html")
+    return render_template(
+        "admin_login.html"
+    )
 
 
-@app.route("/admin/live", methods=["GET", "POST"])
+# ==================================================
+# ADMIN LIVE
+# ==================================================
+
+@app.route(
+    "/admin/live",
+    methods=["GET", "POST"]
+)
 def admin_live():
 
     global live_url
 
     if not session.get("admin"):
-        return redirect("/admin/login")
+
+        return redirect(
+            "/admin/login"
+        )
 
     if request.method == "POST":
 
-        live_url = request.form.get("live_url", "").strip()
+        live_url = request.form.get(
+            "live_url",
+            ""
+        ).strip()
 
-        return redirect("/live")
+        return redirect(
+            "/live"
+        )
 
     return render_template(
         "admin_live.html",
@@ -356,16 +586,29 @@ def admin_live():
     )
 
 
+# ==================================================
+# ADMIN LOGOUT
+# ==================================================
+
 @app.route("/admin/logout")
 def admin_logout():
 
-    session.pop("admin", None)
+    session.pop(
+        "admin",
+        None
+    )
 
-    return redirect("/admin/login")
+    return redirect(
+        "/admin/login"
+    )
 
 
-
+# ==================================================
+# EJECUTAR
+# ==================================================
 
 if __name__ == "__main__":
 
-    app.run(debug=True)
+    app.run(
+        debug=True
+    )
