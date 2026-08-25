@@ -507,14 +507,51 @@ def pagina_no_encontrada(error):
 # LIVE
 # ==================================================
 
+# @app.route("/live")
+# def live():
+
+#     return render_template(
+#         "live.html",
+#         live_url=live_url
+#     )
 @app.route("/live")
 def live():
 
+    live_url = ""
+    activo = False
+
+    try:
+
+        respuesta = requests.get(
+            "https://www.creantunegocio.com/api/live",
+            timeout=15
+        )
+
+        if respuesta.status_code == 200:
+
+            datos = respuesta.json()
+
+            live_url = datos.get(
+                "live_url",
+                ""
+            )
+
+            activo = datos.get(
+                "activo",
+                False
+            )
+
+    except Exception as e:
+
+        print(
+            "ERROR LIVE:",
+            e
+        )
+
     return render_template(
         "live.html",
-        live_url=live_url
+        live_url=live_url if activo else ""
     )
-
 
 # ==================================================
 # ADMIN LOGIN
@@ -555,19 +592,44 @@ def admin_login():
 # ADMIN LIVE
 # ==================================================
 
+# @app.route(
+#     "/admin/live",
+#     methods=["GET", "POST"]
+# )
+# def admin_live():
+
+#     global live_url
+
+#     if not session.get("admin"):
+
+#         return redirect(
+#             "/admin/login"
+#         )
+
+#     if request.method == "POST":
+
+#         live_url = request.form.get(
+#             "live_url",
+#             ""
+#         ).strip()
+
+#         return redirect(
+#             "/live"
+#         )
+
+#     return render_template(
+#         "admin_live.html",
+#         live_url=live_url
+#     )
+
 @app.route(
     "/admin/live",
     methods=["GET", "POST"]
 )
 def admin_live():
 
-    global live_url
-
     if not session.get("admin"):
-
-        return redirect(
-            "/admin/login"
-        )
+        return redirect("/admin/login")
 
     if request.method == "POST":
 
@@ -576,16 +638,75 @@ def admin_live():
             ""
         ).strip()
 
-        return redirect(
-            "/live"
+        try:
+
+            respuesta = requests.post(
+                "https://www.creantunegocio.com/api/live",
+                data={
+                    "live_url": live_url,
+                    "activo": 1
+                },
+                timeout=15
+            )
+
+            if respuesta.status_code != 200:
+
+                flash(
+                    "Error guardando Live"
+                )
+
+                return redirect(
+                    "/admin/live"
+                )
+
+        except Exception as e:
+
+            print(
+                "ERROR API LIVE:",
+                e
+            )
+
+            flash(
+                "Error conectando con la API"
+            )
+
+            return redirect(
+                "/admin/live"
+            )
+
+        return redirect("/live")
+
+    # Obtener Live actual
+
+    live_url = ""
+
+    try:
+
+        respuesta = requests.get(
+            "https://www.creantunegocio.com/api/live",
+            timeout=15
+        )
+
+        if respuesta.status_code == 200:
+
+            datos = respuesta.json()
+
+            live_url = datos.get(
+                "live_url",
+                ""
+            )
+
+    except Exception as e:
+
+        print(
+            "ERROR OBTENIENDO LIVE:",
+            e
         )
 
     return render_template(
         "admin_live.html",
         live_url=live_url
     )
-
-
 # ==================================================
 # ADMIN LOGOUT
 # ==================================================
