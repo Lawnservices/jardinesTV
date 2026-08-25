@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, flash, session
+from flask import Flask, json, render_template, request, redirect, flash, session
 import uuid
 import requests
 import os
@@ -9,7 +9,8 @@ import firebase_admin
 from firebase_admin import credentials, storage
 
 app = Flask(__name__)
-app.secret_key = "jardintv-secreto"
+ 
+
 # contraseña para videos en vivo
 app.secret_key = os.environ.get("SECRET_KEY")
 
@@ -21,6 +22,12 @@ ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD")
 # =========================
 
 firebase_json = os.getenv("FIREBASE_KEY")
+if firebase_json:
+    firebase_data = json.loads(firebase_json)
+
+    cred = credentials.Certificate(firebase_data)
+
+    firebase_admin.initialize_app(cred)
 
 
 with tempfile.NamedTemporaryFile(delete=False, mode="w", suffix=".json") as temp_file:
