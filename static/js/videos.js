@@ -63,4 +63,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
     });
 
+
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+            .then(reg => {
+                console.log('JardinesTV instalada correctamente');
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    });
+}
+
+
 });
