@@ -727,6 +727,18 @@ def admin_logout():
 # ==================================================
 # EJECUTAR
 # ==================================================
+# install
+@app.route('/sw.js')
+def service_worker():
+    response = send_from_directory(
+        app.static_folder,
+        'sw.js'
+    )
+    response.headers['Service-Worker-Allowed'] = '/'
+    response.headers['Content-Type'] = 'application/javascript'
+    return response
+
+
 
 if __name__ == "__main__":
 
