@@ -12,7 +12,8 @@ from flask import (
     request,
     redirect,
     flash,
-    session
+    session,
+    send_from_directory
 )
 
 import firebase_admin
