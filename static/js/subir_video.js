@@ -130,9 +130,11 @@ formulario.addEventListener("submit", async (e) => {
                 resultado.error
             );
         }
-        alert(
-            "✅ Video publicado correctamente"
-        );
+        let mensajes = "✅ Video publicado correctamente"
+        document.getElementById('mensajes').textContent = mensajes;
+        // alert(
+        //     "✅ Video publicado correctamente"
+        // );
         formulario.reset();
     }
     catch (error) {
